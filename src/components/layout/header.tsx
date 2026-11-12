@@ -14,9 +14,11 @@ import { site } from "@/lib/site";
 export function Logo() {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-2 sm:gap-2.5" aria-label={`${site.name} home`}>
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-brand-btn font-mono text-xs font-bold text-white">
-        8
-      </span>
+      <img
+        src="/images/pool/logo-8ball.jpg"
+        alt=""
+        className="h-7 w-7 shrink-0 rounded border border-border object-cover"
+      />
       <span className="text-sm font-semibold tracking-tight text-foreground sm:text-base">
         GlobalPool<span className="text-brand">Store</span>
       </span>

@@ -29,91 +29,33 @@ export function HeroQuickOrder({
 
   return (
     <div className="relative overflow-hidden rounded-xl border border-[#1d3b30] bg-[#0c1f18] text-[#f5f3ed] shadow-sm">
-      {/* Studio-lit 3D Billiard Sphere & Golden Cue Atmospheric Backdrop SVG */}
-      <svg
-        viewBox="0 0 1200 540"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-90"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        aria-hidden
-      >
-        <defs>
-          <radialGradient id="heroFeltGlow" cx="52%" cy="48%" r="55%">
-            <stop offset="0%" stopColor="#165a43" stopOpacity="0.55" />
-            <stop offset="60%" stopColor="#0d3326" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#0c1f18" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="heroGoldGlow" cx="46%" cy="55%" r="35%">
-            <stop offset="0%" stopColor="#d4933b" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#d4933b" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="hero8Ball" cx="35%" cy="28%" r="65%">
-            <stop offset="0%" stopColor="#484844" />
-            <stop offset="35%" stopColor="#1c1c1a" />
-            <stop offset="85%" stopColor="#090908" />
-            <stop offset="100%" stopColor="#030303" />
-          </radialGradient>
-          <radialGradient id="heroGoldBall" cx="32%" cy="28%" r="68%">
-            <stop offset="0%" stopColor="#fff2cc" />
-            <stop offset="35%" stopColor="#e8ae52" />
-            <stop offset="80%" stopColor="#9c5d14" />
-            <stop offset="100%" stopColor="#593205" />
-          </radialGradient>
-          <linearGradient id="heroCueGold" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#8c5412" />
-            <stop offset="50%" stopColor="#f3c474" />
-            <stop offset="100%" stopColor="#a9681b" />
-          </linearGradient>
-        </defs>
-
-        <rect width="1200" height="540" fill="url(#heroFeltGlow)" />
-        <rect width="1200" height="540" fill="url(#heroGoldGlow)" />
-
-        {/* Subtle geometric table rail arc */}
-        <circle cx="575" cy="255" r="220" stroke="#ffffff" strokeOpacity="0.05" strokeWidth="1" />
-        <circle cx="575" cy="255" r="155" stroke="#d4933b" strokeOpacity="0.12" strokeWidth="1" strokeDasharray="4 6" />
-
-        {/* Diagonal Championship Cue Stick in Center Gap */}
-        <g transform="rotate(-32 545 275)" opacity="0.88">
-          <rect x="360" y="271" width="110" height="9" rx="4" fill="url(#heroCueGold)" />
-          <polygon points="470,272 625,274 625,277.5 470,279" fill="#d8d4c8" />
-          <rect x="625" y="273.5" width="9" height="4.2" fill="#ffffff" />
-          <rect x="634" y="273.5" width="6" height="4.2" rx="2" fill="#25b888" />
-        </g>
-
-        {/* Secondary Golden Sphere */}
-        <ellipse cx="508" cy="348" rx="38" ry="9" fill="#000000" fillOpacity="0.45" />
-        <circle cx="508" cy="310" r="36" fill="url(#heroGoldBall)" opacity="0.9" />
-
-        {/* Main Centerpiece Studio-Lit 8-Ball Sphere */}
-        <ellipse cx="602" cy="336" rx="78" ry="15" fill="#000000" fillOpacity="0.55" />
-        <circle cx="602" cy="254" r="74" fill="url(#hero8Ball)" />
-        {/* Specular studio light reflection */}
-        <ellipse cx="574" cy="220" rx="21" ry="11" transform="rotate(-28 574 220)" fill="#ffffff" fillOpacity="0.22" />
-        {/* Number 8 Ivory Medallion */}
-        <circle cx="610" cy="258" r="29" fill="#f5f3ed" />
-        <text
-          x="610"
-          y="270"
-          textAnchor="middle"
-          fill="#111110"
-          fontSize="36"
-          fontWeight="800"
-          fontFamily="sans-serif"
-        >
-          8
-        </text>
-      </svg>
+      {/* Real 8 Ball Pool Backdrop Photography + Dark Emerald Studio Vignette */}
+      <div className="pointer-events-none absolute inset-0">
+        <img
+          src="/images/pool/tables-venues.png"
+          alt=""
+          aria-hidden
+          className="h-full w-full object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#091913]/95 via-[#0c1f18]/85 to-[#091913]/90" />
+      </div>
 
       {/* Main Hero Content Grid */}
       <div className="relative z-10 grid items-center gap-7 p-5 sm:gap-10 sm:p-10 lg:grid-cols-12 lg:p-14">
         {/* Left: Clean, Spacious Headline & Actions */}
         <div className="lg:col-span-7">
-          <p className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#70cfa9]">
-            8 Ball Pool Store &amp; Boosting
-          </p>
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-black/35 py-1 pl-1.5 pr-3.5 backdrop-blur-xs">
+            <img
+              src="/images/pool/logo-8ball.jpg"
+              alt="8 Ball Pool"
+              className="h-6 w-6 rounded-full object-cover"
+            />
+            <span className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#70cfa9]">
+              8 Ball Pool Store &amp; Boosting
+            </span>
+          </div>
 
-          <h1 className="mt-2.5 max-w-xl text-2xl font-bold tracking-tight text-white sm:mt-3 sm:text-5xl sm:leading-[1.1]">
+          <h1 className="mt-3.5 max-w-xl text-2xl font-bold tracking-tight text-white sm:mt-4 sm:text-5xl sm:leading-[1.1]">
             Master the Table.
           </h1>
 
@@ -121,7 +63,24 @@ export function HeroQuickOrder({
             Direct coin and cash top-ups using only your Miniclip Unique ID, maxed legendary cues, and verified Level 150 championship accounts.
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
+          {/* Mini real game preview strip */}
+          <div className="mt-5 flex items-center gap-2.5">
+            {[
+              { src: "/images/pool/logo-8ball.jpg", label: "Coins & Cash" },
+              { src: "/images/pool/cues-legendary.png", label: "Legendary Cues" },
+              { src: "/images/pool/tables-venues.png", label: "Berlin & Venice Rings" },
+            ].map((thumb) => (
+              <div
+                key={thumb.label}
+                className="flex items-center gap-2 rounded-lg border border-white/12 bg-black/35 p-1.5 pr-2.5 backdrop-blur-xs"
+              >
+                <img src={thumb.src} alt={thumb.label} className="h-8 w-10 rounded object-cover" />
+                <span className="hidden text-[11px] font-medium text-white/90 sm:inline">{thumb.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-6 sm:gap-3">
             <Link
               href="/store"
               className="inline-flex h-10 sm:h-11 flex-1 sm:flex-initial items-center justify-center gap-2 rounded-md bg-[#f3c474] px-5 sm:px-6 text-xs sm:text-sm font-bold text-[#1b1406] transition hover:bg-[#eab557]"
@@ -137,7 +96,7 @@ export function HeroQuickOrder({
           </div>
 
           {/* Minimal 3-stat inline footer */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-4 text-[11px] text-[#b0bdb6] sm:mt-10 sm:gap-x-8 sm:pt-5 sm:text-xs">
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-4 text-[11px] text-[#b0bdb6] sm:mt-8 sm:gap-x-8 sm:pt-5 sm:text-xs">
             <div>
               <span className="font-mono text-xs sm:text-sm font-bold text-white">1–2 Hours</span>
               <span className="ml-1.5 sm:ml-2">Avg Coin Delivery</span>
@@ -157,9 +116,16 @@ export function HeroQuickOrder({
         {coinProduct && selected && (
           <div className="rounded-xl border border-white/15 bg-[#122a22]/90 p-4 sm:p-5 backdrop-blur-md lg:col-span-5">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-              <div>
-                <h2 className="text-sm font-bold text-white">Quick Coin Top-Up</h2>
-                <p className="text-[11px] sm:text-xs text-[#9cb0a6]">Delivered straight to your Unique ID</p>
+              <div className="flex items-center gap-2.5">
+                <img
+                  src="/images/pool/logo-8ball.jpg"
+                  alt="8 Ball Pool Coins"
+                  className="h-9 w-9 shrink-0 rounded-lg border border-white/15 object-cover"
+                />
+                <div>
+                  <h2 className="text-sm font-bold text-white">Quick Coin Top-Up</h2>
+                  <p className="text-[11px] sm:text-xs text-[#9cb0a6]">Delivered straight to your Unique ID</p>
+                </div>
               </div>
               <Link
                 href={`/product/${coinProduct.slug}`}
