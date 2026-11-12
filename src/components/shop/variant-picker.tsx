@@ -53,11 +53,15 @@ export function VariantPicker({
   return (
     <div className="space-y-5">
       <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">Choose an option</p>
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="mb-2.5 flex items-center justify-between">
+          <p className="text-xs font-bold uppercase tracking-wider text-muted">Select Package / Option</p>
+          <span className="font-mono text-[11px] text-muted">{variants.length} options available</span>
+        </div>
+        <div className="grid gap-2.5 sm:grid-cols-2">
           {variants.map((v) => {
             const active = v.id === selected.id;
             const oos = v.stock === 0;
+            const hasSavings = v.compareCents && v.compareCents > v.salePriceCents;
             return (
               <button
                 key={v.id}
@@ -65,46 +69,71 @@ export function VariantPicker({
                 disabled={oos}
                 onClick={() => setSelectedId(v.id)}
                 className={cn(
-                  "flex cursor-pointer items-center justify-between rounded-md border px-3.5 py-2.5 text-left transition",
+                  "flex cursor-pointer items-center justify-between rounded-xl border px-3.5 py-3 text-left transition-all duration-150",
                   active
-                    ? "border-brand bg-brand-soft"
-                    : "border-border bg-surface hover:border-border-hover",
+                    ? "border-brand bg-brand-soft shadow-2xs ring-1 ring-brand/25"
+                    : "border-border bg-surface hover:border-border-hover hover:bg-surface-2/50",
                   oos && "cursor-not-allowed opacity-40 line-through",
                 )}
               >
-                <span className="text-sm font-medium text-foreground">{v.label}</span>
-                <span className="font-mono text-sm font-semibold text-brand">
-                  {formatMoney(v.salePriceCents, currency, rates)}
-                </span>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span
+                    className={cn(
+                      "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+                      active ? "border-brand bg-brand text-white" : "border-border bg-background",
+                    )}
+                  >
+                    {active && <Check className="h-2.5 w-2.5" />}
+                  </span>
+                  <span className="truncate text-sm font-semibold text-foreground">{v.label}</span>
+                </div>
+                <div className="text-right shrink-0 pl-2">
+                  <span className="font-mono text-sm font-bold text-brand">
+                    {formatMoney(v.salePriceCents, currency, rates)}
+                  </span>
+                  {hasSavings && (
+                    <span className="ml-1.5 font-mono text-[11px] text-muted line-through">
+                      {formatMoney(v.compareCents!, currency, rates)}
+                    </span>
+                  )}
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      <div className="flex items-baseline justify-between rounded-lg border border-border bg-surface-2 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-2/80 p-4">
         <div>
-          <p className="text-xs text-muted">Selected: {selected.label}</p>
-          <div className="mt-0.5 flex items-baseline gap-2">
-            <span className="text-2xl font-semibold text-foreground">
+          <p className="text-xs font-medium text-muted">Selected Package: <strong className="text-foreground">{selected.label}</strong></p>
+          <div className="mt-1 flex items-baseline gap-2.5">
+            <span className="font-mono text-2xl font-extrabold text-foreground">
               {formatMoney(selected.salePriceCents, currency, rates)}
             </span>
             {selected.compareCents && selected.compareCents > selected.salePriceCents && (
-              <span className="text-sm text-muted line-through">
+              <span className="font-mono text-sm text-muted line-through">
                 {formatMoney(selected.compareCents, currency, rates)}
               </span>
             )}
           </div>
         </div>
-        <span className={cn("text-xs font-medium", out ? "text-danger" : "text-brand")}>
-          {out ? "Out of stock" : selected.stock > 0 ? `${selected.stock} left` : "In stock"}
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold",
+            out
+              ? "border-danger-border bg-danger-soft text-danger"
+              : "border-brand-border bg-brand-soft text-brand",
+          )}
+        >
+          <span className={cn("h-1.5 w-1.5 rounded-full", out ? "bg-danger" : "bg-brand")} />
+          {out ? "Out of stock" : selected.stock > 0 ? `${selected.stock} in stock` : "Ready for delivery"}
         </span>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Button size="lg" variant="secondary" disabled={out} onClick={addCurrent}>
-          {added ? <Check className="h-4 w-4" /> : <ShoppingCart className="h-4 w-4" />}
-          {added ? "Added to cart" : "Add to Cart"}
+          {added ? <Check className="h-4 w-4 text-brand" /> : <ShoppingCart className="h-4 w-4" />}
+          {added ? "Added to Cart" : "Add to Cart"}
         </Button>
         <Button
           variant="primary"
@@ -115,7 +144,7 @@ export function VariantPicker({
             router.push("/checkout");
           }}
         >
-          <Zap className="h-4 w-4" /> Buy Now
+          <Zap className="h-4 w-4" /> Buy Now — Express Checkout
         </Button>
       </div>
     </div>

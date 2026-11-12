@@ -26,10 +26,10 @@ export async function generateMetadata({ params }: PageProps<"/product/[slug]">)
 }
 
 const inputExplain = {
-  UNIQUE_ID: "Only your 10-digit Miniclip Unique ID is required at checkout. No password needed.",
+  UNIQUE_ID: "Only your 10-digit Miniclip Unique ID is required at checkout. Zero password needed.",
   CREDENTIALS:
     "This service requires temporary login access. Your credentials are AES-256 encrypted, visible only to your assigned booster, and deleted automatically 72h after completion.",
-  NONE: "No game details needed at checkout. Delivered by email and on your order tracker.",
+  NONE: "No game details needed at checkout. Delivered by email and on your live order tracker.",
 } as const;
 
 async function ProductBody({ params }: PageProps<"/product/[slug]">) {
@@ -69,10 +69,10 @@ async function ProductBody({ params }: PageProps<"/product/[slug]">) {
   };
 
   return (
-    <Container className="space-y-12 py-10">
+    <Container className="space-y-12 py-8 sm:py-10">
       <JsonLd data={schema} />
 
-      <nav className="flex flex-wrap items-center gap-1 text-xs text-muted">
+      <nav className="flex flex-wrap items-center gap-1.5 text-xs text-muted">
         <Link href="/store" className="hover:text-foreground">
           Store
         </Link>
@@ -81,86 +81,116 @@ async function ProductBody({ params }: PageProps<"/product/[slug]">) {
           {p.category.name}
         </Link>
         <span>/</span>
-        <span className="truncate text-foreground">{p.name}</span>
+        <span className="truncate font-medium text-foreground">{p.name}</span>
       </nav>
 
       <div className="grid gap-6 sm:gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <ProductArt image={p.image} size="lg" className="h-52 sm:h-64 w-full rounded-lg border border-border" />
-          <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
-            <Card className="flex items-center gap-1.5 p-2.5 sm:gap-2 sm:p-3">
-              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-brand" />
-              <span className="truncate">{formatDeliveryHours(p.deliveryHours)}</span>
+          <div className="group relative overflow-hidden rounded-2xl border border-border shadow-sm">
+            <ProductArt image={p.image} size="lg" className="h-60 sm:h-76 w-full border-b-0" />
+            <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
+              {sale && (
+                <span className="rounded-md bg-[#dc2626] px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white shadow-xs">
+                  -{sale.percentOff}% OFF
+                </span>
+              )}
+              {p.badge && (
+                <span className="rounded-md border border-[#f3c474]/40 bg-black/75 px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#f3c474] backdrop-blur-xs">
+                  {p.badge}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] sm:text-xs">
+            <Card className="flex items-center gap-2 p-3">
+              <Clock className="h-4 w-4 shrink-0 text-brand" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-muted">Est. Speed</p>
+                <p className="truncate font-semibold text-foreground">{formatDeliveryHours(p.deliveryHours)}</p>
+              </div>
             </Card>
-            <Card className="flex items-center gap-1.5 p-2.5 sm:gap-2 sm:p-3">
-              <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-brand" />
-              <span className="truncate">{p.region}</span>
+            <Card className="flex items-center gap-2 p-3">
+              <Globe className="h-4 w-4 shrink-0 text-brand" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-muted">Region</p>
+                <p className="truncate font-semibold text-foreground">{p.region}</p>
+              </div>
             </Card>
-            <Card className="flex items-center gap-1.5 p-2.5 sm:gap-2 sm:p-3">
-              <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-brand" />
-              <span className="truncate">Guaranteed</span>
+            <Card className="flex items-center gap-2 p-3">
+              <ShieldCheck className="h-4 w-4 shrink-0 text-brand" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-muted">Protection</p>
+                <p className="truncate font-semibold text-foreground">Ban-Safe</p>
+              </div>
             </Card>
           </div>
         </div>
 
         <div className="space-y-6 lg:col-span-7">
           <div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {sale && <Badge tone="red">-{sale.percentOff}% {sale.title}</Badge>}
               {p.badge && <Badge tone="gold">{p.badge}</Badge>}
               <Badge tone="green">{p.category.name}</Badge>
             </div>
-            <h1 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-foreground">{p.name}</h1>
+            <h1 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+              {p.name}
+            </h1>
             {count > 0 && (
-              <p className="mt-1 text-sm text-muted">
-                <Stars rating={avg} /> <span className="ml-1">{avg.toFixed(1)} ({count} reviews)</span>
+              <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted">
+                <Stars rating={avg} />
+                <span className="font-semibold text-foreground">{avg.toFixed(1)}</span>
+                <span>({count} verified reviews)</span>
               </p>
             )}
-            <p className="mt-3 text-muted">{p.description}</p>
+            <p className="mt-3 text-sm leading-relaxed text-muted">{p.description}</p>
           </div>
 
-          <VariantPicker
-            product={{ slug: p.slug, name: p.name, image: p.image }}
-            variants={variants}
-            currency={currency}
-            rates={rates}
-          />
+          <Card className="p-4 sm:p-5">
+            <VariantPicker
+              product={{ slug: p.slug, name: p.name, image: p.image }}
+              variants={variants}
+              currency={currency}
+              rates={rates}
+            />
+          </Card>
 
-          <Card className="flex items-start gap-3 p-4 text-xs text-muted">
+          <Card className="flex items-start gap-3 border-brand-border bg-brand-soft/60 p-4 text-xs text-foreground">
             {p.requiredInput === "CREDENTIALS" ? (
               <Lock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
             ) : (
               <KeyRound className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
             )}
-            <p>{inputExplain[p.requiredInput]}</p>
+            <p className="leading-relaxed">{inputExplain[p.requiredInput]}</p>
           </Card>
 
           {p.account && (
             <Card className="p-5">
               <h2 className="font-display text-base font-bold text-foreground">Account Specifications</h2>
               <dl className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-                <div>
-                  <dt className="text-xs text-muted">Level</dt>
-                  <dd className="font-semibold text-foreground">{p.account.level}</dd>
+                <div className="rounded-lg border border-border bg-background/60 p-2.5">
+                  <dt className="text-[11px] text-muted">Account Level</dt>
+                  <dd className="mt-0.5 font-mono font-bold text-foreground">Lvl {p.account.level}</dd>
                 </div>
-                <div>
-                  <dt className="text-xs text-muted">Win Rate</dt>
-                  <dd className="font-semibold text-foreground">{p.account.winRate}%</dd>
+                <div className="rounded-lg border border-border bg-background/60 p-2.5">
+                  <dt className="text-[11px] text-muted">Win Rate</dt>
+                  <dd className="mt-0.5 font-mono font-bold text-foreground">{p.account.winRate}%</dd>
                 </div>
-                <div>
-                  <dt className="text-xs text-muted">Coins</dt>
-                  <dd className="font-semibold text-brand">{p.account.coins}</dd>
+                <div className="rounded-lg border border-border bg-background/60 p-2.5">
+                  <dt className="text-[11px] text-muted">Coin Balance</dt>
+                  <dd className="mt-0.5 font-mono font-bold text-brand">{p.account.coins}</dd>
                 </div>
-                <div>
-                  <dt className="text-xs text-muted">Cash</dt>
-                  <dd className="font-semibold text-accent">{p.account.cash.toLocaleString()}</dd>
+                <div className="rounded-lg border border-border bg-background/60 p-2.5">
+                  <dt className="text-[11px] text-muted">Pool Cash</dt>
+                  <dd className="mt-0.5 font-mono font-bold text-accent">{p.account.cash.toLocaleString()}</dd>
                 </div>
               </dl>
               <p className="mt-3 text-xs text-muted">
-                <strong className="text-foreground">Cues:</strong> {p.account.cues.join(", ")}
+                <strong className="text-foreground">Unlocked Cues:</strong> {p.account.cues.join(", ")}
               </p>
               <p className="mt-1 text-xs text-muted">
-                <strong className="text-foreground">Rings:</strong> {p.account.rings.join(", ")}
+                <strong className="text-foreground">Championship Rings:</strong> {p.account.rings.join(", ")}
               </p>
             </Card>
           )}

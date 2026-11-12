@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { ArrowRight } from "lucide-react";
-import { Card, Container, PageFallback, Stars } from "@/components/ui/primitives";
+import { ArrowRight, ArrowUpRight, CheckCircle2, KeyRound, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { Badge, Card, Container, PageFallback, SectionHeading, Stars } from "@/components/ui/primitives";
 import { buttonClass } from "@/components/ui/button";
 import { HeroQuickOrder } from "@/components/shop/hero-carousel";
 import { LiveOrderTicker } from "@/components/shop/live-ticker";
@@ -13,6 +13,14 @@ import { db } from "@/lib/db";
 import { applySale, getActiveSales, getCategories, getProducts, getRecentOrdersForTicker, saleFor } from "@/lib/catalog";
 import { getMoneyContext } from "@/lib/money";
 import { site } from "@/lib/site";
+
+const categoryBgMap: Record<string, string> = {
+  "coins-cash": "/images/pool/logo-8ball.jpg",
+  "cues-unlocks": "/images/pool/cues-legendary.png",
+  accounts: "/images/pool/match-green.jpg",
+  boosting: "/images/pool/tables-venues.png",
+  "vip-access": "/images/pool/match-blue.jpg",
+};
 
 async function getHomeContent() {
   "use cache";
@@ -52,11 +60,11 @@ async function HomeBody() {
   };
 
   return (
-    <Container className="space-y-12 py-6">
+    <Container className="space-y-14 py-6 sm:space-y-16 sm:py-8">
       <JsonLd data={orgSchema} />
 
-      {/* 1. Hero Showcase + Subtle Live Ticker */}
-      <div className="space-y-3">
+      {/* 1. Hero Showcase + Live Order Ticker */}
+      <div className="space-y-3.5">
         <HeroQuickOrder
           coinProduct={
             coinProd
@@ -78,88 +86,195 @@ async function HomeBody() {
         <LiveOrderTicker initial={ticker} />
       </div>
 
-      {/* 2. Clean 5-Tile Category Row */}
+      {/* 2. Visual 5-Tile Category Showcase */}
       <section>
-        <div className="mb-4 flex items-baseline justify-between">
-          <h2 className="text-lg font-bold tracking-tight text-foreground">Browse by Category</h2>
-          <Link href="/store" className="text-xs font-semibold text-brand hover:underline">
-            Full Catalog →
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
+          <SectionHeading
+            eyebrow="8 Ball Pool Departments"
+            title="Shop by Category"
+            subtitle="Direct Unique ID top-ups, 20/20 Legendary Cues, maxed accounts & ring boosting"
+          />
+          <Link href="/store" className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline">
+            Explore Full Catalog <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5">
           {categories.map((c) => {
             const Icon = categoryIcons[c.icon as keyof typeof categoryIcons] ?? categoryIcons.Coins;
+            const bgSrc = categoryBgMap[c.slug] ?? "/images/pool/logo-8ball.jpg";
             return (
-              <Link key={c.id} href={`/store/${c.slug}`} className="group">
-                <Card className="flex h-full items-center gap-3.5 p-4 transition-colors hover:border-border-hover">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="truncate text-sm font-bold text-foreground group-hover:text-brand">{c.name}</h3>
-                    <p className="truncate text-xs text-muted">{c.tagline}</p>
+              <Link key={c.id} href={`/store/${c.slug}`} className="group block">
+                <div className="relative flex h-36 flex-col justify-between overflow-hidden rounded-xl border border-[#1d3b30] bg-[#091b14] p-4 text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-[#68d8ae]/60 hover:shadow-md">
+                  <img
+                    src={bgSrc}
+                    alt={c.name}
+                    loading="lazy"
+                    className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-40 transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#05120d]/95 via-[#071912]/65 to-black/30" />
+
+                  <div className="relative z-10 flex items-center justify-between">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-black/50 text-[#f3c474] backdrop-blur-xs">
+                      <Icon className="h-4.5 w-4.5" />
+                    </span>
+                    <span className="inline-flex items-center gap-0.5 rounded-full border border-white/15 bg-black/50 px-2 py-0.5 font-mono text-[10px] font-semibold text-white/90 backdrop-blur-xs">
+                      {c._count.products} items <ArrowUpRight className="h-3 w-3 text-[#68d8ae]" />
+                    </span>
                   </div>
-                </Card>
+
+                  <div className="relative z-10">
+                    <h3 className="truncate text-sm font-bold text-white group-hover:text-[#f3c474]">{c.name}</h3>
+                    <p className="mt-0.5 truncate text-[11px] text-[#b4c4bc]">{c.tagline}</p>
+                  </div>
+                </div>
               </Link>
             );
           })}
         </div>
       </section>
 
-      {/* 3. Curated 4-Card Featured Row */}
+      {/* 3. Curated 4-Card Featured Packages Row */}
       <section>
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h2 className="text-lg font-bold tracking-tight text-foreground">Featured Packages</h2>
-            <p className="text-xs text-muted">Most ordered coins, cash, legendary cues and maxed accounts</p>
-          </div>
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <SectionHeading
+            eyebrow="Top Sellers"
+            title="Featured 8 Ball Pool Packages"
+            subtitle="Most ordered coins, cash, legendary cues and championship accounts"
+          />
           <Link href="/store" className={buttonClass("secondary", "sm")}>
             View All 16 Products <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((p) => (
             <ProductCard key={p.id} product={p} sale={saleFor(sales, p.slug)} />
           ))}
         </div>
       </section>
 
-      {/* 4. Compact Reviews & Welcome Offer Row */}
-      <section className="grid gap-4 lg:grid-cols-12">
-        <div className="grid gap-3 sm:grid-cols-3 lg:col-span-8">
-          {reviews.map((r) => (
-            <Card key={r.id} className="flex flex-col justify-between p-4">
+      {/* 4. How Instant Delivery Works (3-Step Visual Strip) */}
+      <section className="rounded-2xl border border-border bg-surface p-5 shadow-2xs sm:p-8">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-2">
+          <SectionHeading
+            eyebrow="Fast & Ban-Safe"
+            title="How 8 Ball Pool Delivery Works"
+            subtitle="Streamlined fulfillment designed for zero downtime and complete account safety"
+          />
+          <Link href="/track" className="text-xs font-bold text-brand hover:underline">
+            Live Order Tracker →
+          </Link>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              step: "01",
+              Icon: KeyRound,
+              title: "Pick Your Pack & Enter Unique ID",
+              body: "For coin, cash, and VIP key orders, only your 10-digit Miniclip Unique ID is needed—no password required.",
+            },
+            {
+              step: "02",
+              Icon: ShieldCheck,
+              title: "Instant Encrypted Checkout",
+              body: "Pay with card, Apple/Google Pay, PayPal, or USDT/BTC. Credentials for cue/ring boosts are AES-256 encrypted.",
+            },
+            {
+              step: "03",
+              Icon: Zap,
+              title: "1–2 Hour Transfer & Live Tracking",
+              body: "Follow your order in real time from Queued → In Progress → Delivered with instant email confirmation.",
+            },
+          ].map(({ step, Icon, title, body }) => (
+            <div
+              key={step}
+              className="relative flex flex-col justify-between rounded-xl border border-border bg-background/60 p-5"
+            >
               <div>
-                <div className="flex items-center justify-between text-xs">
-                  <Stars rating={r.rating} />
-                  <span className="font-mono text-[10px] text-muted">{r.country}</span>
+                <div className="flex items-center justify-between">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-border bg-brand-soft text-brand">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="font-mono text-xs font-extrabold text-muted">STEP {step}</span>
                 </div>
-                <p className="mt-2 text-xs leading-relaxed text-foreground">&ldquo;{r.body}&rdquo;</p>
+                <h3 className="mt-4 text-sm sm:text-base font-bold text-foreground">{title}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted">{body}</p>
               </div>
-              <p className="mt-3 text-[11px] text-muted">
-                <strong className="text-foreground">{r.author}</strong> · {r.product.name}
-              </p>
-            </Card>
+            </div>
           ))}
         </div>
+      </section>
 
-        <Card className="flex flex-col justify-between p-5 lg:col-span-4">
-          <div>
-            <p className="font-mono text-xs font-semibold text-brand">NEW PLAYER OFFER</p>
-            <h3 className="mt-1 text-base font-bold text-foreground">Save 10% with code WELCOME10</h3>
-            <p className="mt-1 text-xs leading-relaxed text-muted">
-              Apply <code className="font-mono font-bold text-foreground">WELCOME10</code> at checkout, plus earn 10 loyalty points per $1 spent.
+      {/* 5. Verified Reviews & Dark-Emerald Welcome Offer Banner */}
+      <section className="grid gap-5 lg:grid-cols-12">
+        <div className="space-y-4 lg:col-span-8">
+          <div className="flex items-end justify-between">
+            <div>
+              <h2 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">Verified Player Reviews</h2>
+              <p className="text-xs text-muted">Rated 4.9/5 across thousands of 8 Ball Pool deliveries</p>
+            </div>
+            <Link href="/reviews" className="text-xs font-bold text-brand hover:underline">
+              All Reviews →
+            </Link>
+          </div>
+          <div className="grid gap-3.5 sm:grid-cols-3">
+            {reviews.map((r) => (
+              <Card key={r.id} className="flex flex-col justify-between p-4 hover:border-border-hover">
+                <div>
+                  <div className="flex items-center justify-between text-xs">
+                    <Stars rating={r.rating} />
+                    <Badge tone="green" className="text-[10px]">
+                      <CheckCircle2 className="h-2.5 w-2.5" /> {r.country}
+                    </Badge>
+                  </div>
+                  <p className="mt-2.5 text-xs leading-relaxed text-foreground">&ldquo;{r.body}&rdquo;</p>
+                </div>
+                <div className="mt-4 border-t border-border pt-2.5 text-[11px] text-muted">
+                  <strong className="font-semibold text-foreground">{r.author}</strong> ·{" "}
+                  <Link href={`/product/${r.product.slug}`} className="text-brand hover:underline">
+                    {r.product.name}
+                  </Link>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Rich Dark-Emerald & Gold Promo Card */}
+        <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] p-6 text-white shadow-md lg:col-span-4">
+          <img
+            src="/images/pool/tournament-coins.jpg"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#071913]/95 via-[#0b251c]/90 to-[#06140f]/95" />
+
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#f3c474]/40 bg-black/50 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-[#f3c474]">
+              <Sparkles className="h-3 w-3" /> New Player Bonus
+            </span>
+            <h3 className="mt-3 text-xl font-extrabold text-white">Save 10% Instantly on Your First Order</h3>
+            <p className="mt-2 text-xs leading-relaxed text-[#b8c7bf]">
+              Enter promo code{" "}
+              <code className="rounded border border-[#f3c474]/40 bg-black/50 px-1.5 py-0.5 font-mono font-bold text-[#f3c474]">
+                WELCOME10
+              </code>{" "}
+              at checkout, plus earn <strong className="text-white">10 loyalty points per $1</strong> spent toward free coins.
             </p>
           </div>
-          <div className="mt-4 flex items-center gap-3">
-            <Link href="/deals" className={buttonClass("primary", "sm")}>
-              View Deals
+
+          <div className="relative z-10 mt-6 flex flex-wrap items-center gap-3">
+            <Link
+              href="/deals"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-4 text-xs font-bold text-[#1b1406] shadow-xs transition hover:brightness-105"
+            >
+              Claim Offer <ArrowRight className="h-3.5 w-3.5" />
             </Link>
-            <Link href="/rewards" className="text-xs font-semibold text-brand hover:underline">
-              Rewards &amp; Referrals →
+            <Link href="/rewards" className="text-xs font-semibold text-[#68d8ae] hover:underline">
+              Loyalty Program →
             </Link>
           </div>
-        </Card>
+        </div>
       </section>
     </Container>
   );

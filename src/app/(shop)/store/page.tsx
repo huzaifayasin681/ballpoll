@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Sparkles } from "lucide-react";
 import { Card, Container, Input, PageFallback, Select } from "@/components/ui/primitives";
 import { Button, buttonClass } from "@/components/ui/button";
 import { ProductCard } from "@/components/shop/product-card";
@@ -31,37 +32,61 @@ export async function StoreView({
   const currentCat = categories.find((c) => c.slug === categorySlug);
 
   return (
-    <Container className="py-10">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">{currentCat ? currentCat.name : "All Products & Services"}</h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted">
-          {currentCat ? currentCat.description : "Filter by category, asset type, delivery speed or price."}
-        </p>
+    <Container className="py-8 sm:py-10">
+      {/* Rich Store Header Banner */}
+      <div className="relative mb-6 overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] p-6 text-white shadow-sm sm:p-8">
+        <img
+          src="/images/pool/cues-legendary.png"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06140f]/95 via-[#091f17]/85 to-[#06140f]/90" />
+        <div className="relative z-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#68d8ae]/30 bg-[#0d2d22]/85 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-[#68d8ae]">
+              <Sparkles className="h-3 w-3 text-[#f3c474]" /> Official Catalog
+            </span>
+            <h1 className="mt-2.5 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+              {currentCat ? currentCat.name : "All 8 Ball Pool Products & Services"}
+            </h1>
+            <p className="mt-1 max-w-2xl text-xs sm:text-sm text-[#b8c7bf]">
+              {currentCat
+                ? currentCat.description
+                : "Filter by department, asset type, delivery speed, or price. Every order includes live status tracking."}
+            </p>
+          </div>
+          <div className="shrink-0 font-mono text-xs text-[#f3c474]">
+            Showing <strong>{products.length}</strong> available packages
+          </div>
+        </div>
       </div>
 
       {/* Category tabs */}
-      <div className="-mx-4 mb-5 flex gap-1.5 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0">
+      <div className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0">
         <Link
           href="/store"
           className={cn(
-            "shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
-            !categorySlug ? "border-brand bg-brand-soft text-brand" : "border-border bg-surface text-muted hover:text-foreground",
+            "shrink-0 whitespace-nowrap rounded-lg border px-3.5 py-2 text-xs font-semibold transition-all",
+            !categorySlug
+              ? "border-brand bg-brand-btn text-white shadow-2xs"
+              : "border-border bg-surface text-muted hover:border-border-hover hover:text-foreground",
           )}
         >
-          All Products
+          All Departments
         </Link>
         {categories.map((c) => (
           <Link
             key={c.id}
             href={`/store/${c.slug}`}
             className={cn(
-              "shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
+              "shrink-0 whitespace-nowrap rounded-lg border px-3.5 py-2 text-xs font-semibold transition-all",
               categorySlug === c.slug
-                ? "border-brand bg-brand-soft text-brand"
-                : "border-border bg-surface text-muted hover:text-foreground",
+                ? "border-brand bg-brand-btn text-white shadow-2xs"
+                : "border-border bg-surface text-muted hover:border-border-hover hover:text-foreground",
             )}
           >
-            {c.name} ({c._count.products})
+            {c.name} <span className="ml-1 opacity-75">({c._count.products})</span>
           </Link>
         ))}
       </div>
@@ -69,7 +94,12 @@ export async function StoreView({
       {/* Filter form */}
       <Card className="mb-8 p-3.5 sm:p-4">
         <form className="grid gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-5">
-          <Input name="q" defaultValue={filters.q} placeholder="Search coins, Archangel, boost…" className="lg:col-span-2" />
+          <Input
+            name="q"
+            defaultValue={filters.q}
+            placeholder="Search coins, Archangel, Venice ring…"
+            className="lg:col-span-2"
+          />
           <Select name="type" defaultValue={filters.type ?? ""}>
             <option value="">All asset types</option>
             <option value="CURRENCY">Currency & Top-Ups</option>

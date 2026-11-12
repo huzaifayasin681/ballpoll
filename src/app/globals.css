@@ -1,44 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f6f5f1;
+  --bg: #f4f3ee;
   --surface: #ffffff;
-  --surface-2: #efece6;
-  --art-bg: #f1efe9;
-  --border: #dfdcd4;
-  --border-hover: #b5b0a4;
-  --muted: #63615c;
-  --fg: #141413;
-  --brand: #0d4f3c;
-  --brand-btn: #0d4f3c;
-  --brand-btn-hover: #093b2c;
-  --brand-soft: #e8f2ee;
-  --brand-border: #c5ddd3;
-  --accent: #9a5b13;
-  --accent-soft: #f9f1e4;
-  --accent-border: #e8d3b3;
+  --surface-2: #edeae2;
+  --art-bg: #0c1f18;
+  --border: #dedad0;
+  --border-hover: #a8a293;
+  --muted: #5e5c56;
+  --fg: #121312;
+  --brand: #0d5942;
+  --brand-btn: #0d5942;
+  --brand-btn-hover: #094230;
+  --brand-soft: #e5f3ed;
+  --brand-border: #badccd;
+  --accent: #a66312;
+  --accent-soft: #fbf2e3;
+  --accent-border: #ebd2ad;
   --danger: #b91c1c;
   --danger-soft: #fbe9e9;
   --danger-border: #f1c4c4;
 }
 
 html.dark {
-  --bg: #111110;
-  --surface: #191917;
-  --surface-2: #22211e;
-  --art-bg: #151513;
-  --border: #2c2b27;
-  --border-hover: #45433d;
-  --muted: #9c988e;
-  --fg: #f2f0ea;
-  --brand: #63c19f;
-  --brand-btn: #145e48;
-  --brand-btn-hover: #1b7359;
-  --brand-soft: #142620;
-  --brand-border: #23473b;
-  --accent: #d4933b;
-  --accent-soft: #261e12;
-  --accent-border: #4a371c;
+  --bg: #0d0f0e;
+  --surface: #151816;
+  --surface-2: #1d211f;
+  --art-bg: #0c1f18;
+  --border: #262b28;
+  --border-hover: #3d4641;
+  --muted: #989e99;
+  --fg: #f2f4f2;
+  --brand: #5cd4a8;
+  --brand-btn: #14694e;
+  --brand-btn-hover: #198261;
+  --brand-soft: #112820;
+  --brand-border: #204b3c;
+  --accent: #e5a94c;
+  --accent-soft: #271f12;
+  --accent-border: #4d3a1d;
   --danger: #e06c6c;
   --danger-soft: #2a1616;
   --danger-border: #4f2424;
@@ -77,9 +77,14 @@ html {
 
 body {
   background: var(--color-background);
+  background-image: radial-gradient(ellipse 80% 50% at 50% -15%, rgba(13, 89, 66, 0.08), transparent);
   color: var(--color-foreground);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: clip;
+}
+
+html.dark body {
+  background-image: radial-gradient(ellipse 80% 50% at 50% -15%, rgba(92, 212, 168, 0.09), transparent);
 }
 
 /* Markdown prose for guides & legal */
@@ -148,7 +153,7 @@ body {
 }
 
 ::selection {
-  background: rgba(13, 79, 60, 0.22);
+  background: rgba(13, 89, 66, 0.22);
 }
 
 .no-scrollbar::-webkit-scrollbar {
