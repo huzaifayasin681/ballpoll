@@ -40,11 +40,11 @@ export async function StoreView({
       </div>
 
       {/* Category tabs */}
-      <div className="mb-5 flex flex-wrap gap-1.5">
+      <div className="-mx-4 mb-5 flex gap-1.5 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0">
         <Link
           href="/store"
           className={cn(
-            "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
+            "shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
             !categorySlug ? "border-brand bg-brand-soft text-brand" : "border-border bg-surface text-muted hover:text-foreground",
           )}
         >
@@ -55,7 +55,7 @@ export async function StoreView({
             key={c.id}
             href={`/store/${c.slug}`}
             className={cn(
-              "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
+              "shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
               categorySlug === c.slug
                 ? "border-brand bg-brand-soft text-brand"
                 : "border-border bg-surface text-muted hover:text-foreground",
@@ -67,8 +67,8 @@ export async function StoreView({
       </div>
 
       {/* Filter form */}
-      <Card className="mb-8 p-4">
-        <form className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <Card className="mb-8 p-3.5 sm:p-4">
+        <form className="grid gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-5">
           <Input name="q" defaultValue={filters.q} placeholder="Search coins, Archangel, boost…" className="lg:col-span-2" />
           <Select name="type" defaultValue={filters.type ?? ""}>
             <option value="">All asset types</option>
@@ -85,14 +85,14 @@ export async function StoreView({
             <option value="standard">Standard (6h+)</option>
           </Select>
           <div className="flex gap-2">
-            <Select name="sort" defaultValue={filters.sort}>
+            <Select name="sort" defaultValue={filters.sort} className="min-w-0 flex-1">
               <option value="popular">Featured</option>
               <option value="price-asc">Price: Low → High</option>
               <option value="price-desc">Price: High → Low</option>
               <option value="fastest">Fastest delivery</option>
               <option value="newest">Newest</option>
             </Select>
-            <Button type="submit" size="md" className="h-11">
+            <Button type="submit" size="md" className="h-10 shrink-0">
               Apply
             </Button>
           </div>

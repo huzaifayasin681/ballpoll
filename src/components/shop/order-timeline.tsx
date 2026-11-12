@@ -58,13 +58,13 @@ export function OrderTimeline({
       </div>
 
       {currentIdx >= 0 && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-2">
           {steps.map((s, i) => {
             const done = i <= currentIdx;
             return (
               <div key={s.status} className="space-y-1.5">
                 <div className={cn("h-1.5 rounded-full", done ? "bg-brand" : "bg-surface-2")} />
-                <p className={cn("text-xs font-medium", done ? "text-brand" : "text-muted")}>{s.label}</p>
+                <p className={cn("text-[11px] sm:text-xs font-medium", done ? "text-brand" : "text-muted")}>{s.label}</p>
               </div>
             );
           })}

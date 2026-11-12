@@ -119,9 +119,9 @@ export function CheckoutClient({
     <form onSubmit={submit} className="grid gap-8 lg:grid-cols-12">
       <div className="space-y-6 lg:col-span-7">
         {/* Step 1: Contact */}
-        <Card className="space-y-4 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-bold text-foreground">1. Contact Email</h2>
+        <Card className="space-y-4 p-4 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-display text-base sm:text-lg font-bold text-foreground">1. Contact Email</h2>
             {!user && (
               <Link href="/login?next=/checkout" className="text-xs font-medium text-brand hover:underline">
                 Have an account? Sign in
@@ -136,13 +136,13 @@ export function CheckoutClient({
 
         {/* Step 2: Game details (conditional) */}
         {(quote?.needsUniqueId || quote?.needsCreds) && (
-          <Card className="space-y-4 p-6">
-            <h2 className="font-display text-lg font-bold text-foreground">2. 8 Ball Pool Account Details</h2>
+          <Card className="space-y-4 p-4 sm:p-6">
+            <h2 className="font-display text-base sm:text-lg font-bold text-foreground">2. 8 Ball Pool Account Details</h2>
             {quote.needsUniqueId && (
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1">
                   <Label htmlFor="uid">Miniclip Unique ID</Label>
-                  <Link href="/blog/how-to-find-your-miniclip-unique-id" className="text-xs text-brand hover:underline">
+                  <Link href="/blog/how-to-find-your-miniclip-unique-id" className="mb-1.5 text-xs text-brand hover:underline">
                     Where do I find this?
                   </Link>
                 </div>
@@ -195,14 +195,14 @@ export function CheckoutClient({
         )}
 
         {/* Step 3: Payment method */}
-        <Card className="space-y-3 p-6">
-          <h2 className="font-display text-lg font-bold text-foreground">3. Payment Method</h2>
+        <Card className="space-y-3 p-4 sm:p-6">
+          <h2 className="font-display text-base sm:text-lg font-bold text-foreground">3. Payment Method</h2>
           <div className="grid gap-2.5">
             {gateways.map((g) => (
               <label
                 key={g.id}
                 className={cn(
-                  "flex cursor-pointer items-start justify-between gap-3 rounded-xl border p-3.5 transition",
+                  "flex cursor-pointer items-start justify-between gap-3 rounded-xl border p-3 sm:p-3.5 transition",
                   paymentMethod === g.id ? "border-brand bg-brand-soft" : "border-border bg-surface-2",
                   !g.enabled && "cursor-not-allowed opacity-45",
                 )}
@@ -229,15 +229,15 @@ export function CheckoutClient({
       </div>
 
       {/* Summary */}
-      <Card className="h-fit space-y-4 p-6 lg:col-span-5">
-        <h2 className="font-display text-lg font-bold text-foreground">Order Summary</h2>
+      <Card className="h-fit space-y-4 p-4 sm:p-6 lg:col-span-5">
+        <h2 className="font-display text-base sm:text-lg font-bold text-foreground">Order Summary</h2>
         <ul className="divide-y divide-border text-sm">
           {(quote?.lines ?? []).map((l) => (
-            <li key={l.variantId} className="flex justify-between py-2.5">
-              <span>
+            <li key={l.variantId} className="flex items-start justify-between gap-3 py-2.5">
+              <span className="min-w-0">
                 {l.productName} <span className="text-muted">({l.variantLabel}) × {l.quantity}</span>
               </span>
-              <span className="font-medium text-foreground">{formatMoney(l.unitCents * l.quantity, currency, rates)}</span>
+              <span className="shrink-0 font-medium text-foreground">{formatMoney(l.unitCents * l.quantity, currency, rates)}</span>
             </li>
           ))}
         </ul>

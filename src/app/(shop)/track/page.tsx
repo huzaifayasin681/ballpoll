@@ -101,8 +101,8 @@ async function TrackBody({ searchParams }: PageProps<"/track">) {
                     {it.name} × {it.quantity}
                   </span>
                   {it.licenseKey && (
-                    <Badge tone="green" className="font-mono">
-                      <KeyRound className="h-3 w-3" /> Key: {decrypt(it.licenseKey.keyEnc)}
+                    <Badge tone="green" className="font-mono break-all">
+                      <KeyRound className="h-3 w-3 shrink-0" /> Key: {decrypt(it.licenseKey.keyEnc)}
                     </Badge>
                   )}
                 </li>

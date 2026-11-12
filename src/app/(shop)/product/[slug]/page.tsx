@@ -72,32 +72,33 @@ async function ProductBody({ params }: PageProps<"/product/[slug]">) {
     <Container className="space-y-12 py-10">
       <JsonLd data={schema} />
 
-      <nav className="text-xs text-muted">
+      <nav className="flex flex-wrap items-center gap-1 text-xs text-muted">
         <Link href="/store" className="hover:text-foreground">
           Store
-        </Link>{" "}
-        /{" "}
+        </Link>
+        <span>/</span>
         <Link href={`/store/${p.category.slug}`} className="hover:text-foreground">
           {p.category.name}
-        </Link>{" "}
-        / <span className="text-foreground">{p.name}</span>
+        </Link>
+        <span>/</span>
+        <span className="truncate text-foreground">{p.name}</span>
       </nav>
 
-      <div className="grid gap-8 lg:grid-cols-12">
+      <div className="grid gap-6 sm:gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <ProductArt image={p.image} size="lg" className="h-64 w-full rounded-lg border border-border" />
-          <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
-            <Card className="flex items-center gap-2 p-3">
-              <Clock className="h-4 w-4 text-brand" />
-              <span>{formatDeliveryHours(p.deliveryHours)}</span>
+          <ProductArt image={p.image} size="lg" className="h-52 sm:h-64 w-full rounded-lg border border-border" />
+          <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
+            <Card className="flex items-center gap-1.5 p-2.5 sm:gap-2 sm:p-3">
+              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-brand" />
+              <span className="truncate">{formatDeliveryHours(p.deliveryHours)}</span>
             </Card>
-            <Card className="flex items-center gap-2 p-3">
-              <Globe className="h-4 w-4 text-brand" />
-              <span>{p.region}</span>
+            <Card className="flex items-center gap-1.5 p-2.5 sm:gap-2 sm:p-3">
+              <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-brand" />
+              <span className="truncate">{p.region}</span>
             </Card>
-            <Card className="flex items-center gap-2 p-3">
-              <ShieldCheck className="h-4 w-4 text-brand" />
-              <span>Guaranteed</span>
+            <Card className="flex items-center gap-1.5 p-2.5 sm:gap-2 sm:p-3">
+              <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-brand" />
+              <span className="truncate">Guaranteed</span>
             </Card>
           </div>
         </div>
@@ -109,7 +110,7 @@ async function ProductBody({ params }: PageProps<"/product/[slug]">) {
               {p.badge && <Badge tone="gold">{p.badge}</Badge>}
               <Badge tone="green">{p.category.name}</Badge>
             </div>
-            <h1 className="mt-3 font-display text-3xl font-bold text-foreground">{p.name}</h1>
+            <h1 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-foreground">{p.name}</h1>
             {count > 0 && (
               <p className="mt-1 text-sm text-muted">
                 <Stars rating={avg} /> <span className="ml-1">{avg.toFixed(1)} ({count} reviews)</span>

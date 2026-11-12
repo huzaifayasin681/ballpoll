@@ -106,60 +106,60 @@ export function HeroQuickOrder({
       </svg>
 
       {/* Main Hero Content Grid */}
-      <div className="relative z-10 grid items-center gap-10 p-7 sm:p-11 lg:grid-cols-12 lg:p-14">
+      <div className="relative z-10 grid items-center gap-7 p-5 sm:gap-10 sm:p-10 lg:grid-cols-12 lg:p-14">
         {/* Left: Clean, Spacious Headline & Actions */}
         <div className="lg:col-span-7">
-          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-[#70cfa9]">
+          <p className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#70cfa9]">
             8 Ball Pool Store &amp; Boosting
           </p>
 
-          <h1 className="mt-3 max-w-xl text-3xl font-bold tracking-tight text-white sm:text-5xl sm:leading-[1.1]">
+          <h1 className="mt-2.5 max-w-xl text-2xl font-bold tracking-tight text-white sm:mt-3 sm:text-5xl sm:leading-[1.1]">
             Master the Table.
           </h1>
 
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-[#c4cec8] sm:text-base">
+          <p className="mt-3 max-w-lg text-xs leading-relaxed text-[#c4cec8] sm:mt-4 sm:text-base">
             Direct coin and cash top-ups using only your Miniclip Unique ID, maxed legendary cues, and verified Level 150 championship accounts.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
             <Link
               href="/store"
-              className="inline-flex h-11 items-center gap-2 rounded-md bg-[#f3c474] px-6 text-sm font-bold text-[#1b1406] transition hover:bg-[#eab557]"
+              className="inline-flex h-10 sm:h-11 flex-1 sm:flex-initial items-center justify-center gap-2 rounded-md bg-[#f3c474] px-5 sm:px-6 text-xs sm:text-sm font-bold text-[#1b1406] transition hover:bg-[#eab557]"
             >
               Explore Store <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/track"
-              className="inline-flex h-11 items-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 text-sm font-medium text-white backdrop-blur-xs transition hover:bg-white/10"
+              className="inline-flex h-10 sm:h-11 flex-1 sm:flex-initial items-center justify-center gap-2 rounded-md border border-white/20 bg-white/5 px-4 sm:px-5 text-xs sm:text-sm font-medium text-white backdrop-blur-xs transition hover:bg-white/10"
             >
               Track Order
             </Link>
           </div>
 
           {/* Minimal 3-stat inline footer */}
-          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/10 pt-5 text-xs text-[#b0bdb6]">
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-4 text-[11px] text-[#b0bdb6] sm:mt-10 sm:gap-x-8 sm:pt-5 sm:text-xs">
             <div>
-              <span className="font-mono text-sm font-bold text-white">1–2 Hours</span>
-              <span className="ml-2">Avg Coin Delivery</span>
+              <span className="font-mono text-xs sm:text-sm font-bold text-white">1–2 Hours</span>
+              <span className="ml-1.5 sm:ml-2">Avg Coin Delivery</span>
             </div>
             <div>
-              <span className="font-mono text-sm font-bold text-white">Unique ID Only</span>
-              <span className="ml-2">No Password for Coins</span>
+              <span className="font-mono text-xs sm:text-sm font-bold text-white">Unique ID Only</span>
+              <span className="ml-1.5 sm:ml-2">No Password for Coins</span>
             </div>
             <div>
-              <span className="font-mono text-sm font-bold text-[#f3c474]">4.9 ★</span>
-              <span className="ml-2">Verified Players</span>
+              <span className="font-mono text-xs sm:text-sm font-bold text-[#f3c474]">4.9 ★</span>
+              <span className="ml-1.5 sm:ml-2">Verified Players</span>
             </div>
           </div>
         </div>
 
         {/* Right: Sleek Floating Quick Coin Selector Card */}
         {coinProduct && selected && (
-          <div className="rounded-xl border border-white/15 bg-[#122a22]/90 p-5 backdrop-blur-md lg:col-span-5">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="rounded-xl border border-white/15 bg-[#122a22]/90 p-4 sm:p-5 backdrop-blur-md lg:col-span-5">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
               <div>
                 <h2 className="text-sm font-bold text-white">Quick Coin Top-Up</h2>
-                <p className="text-xs text-[#9cb0a6]">Delivered straight to your Unique ID</p>
+                <p className="text-[11px] sm:text-xs text-[#9cb0a6]">Delivered straight to your Unique ID</p>
               </div>
               <Link
                 href={`/product/${coinProduct.slug}`}
@@ -178,14 +178,14 @@ export function HeroQuickOrder({
                     type="button"
                     onClick={() => setSelectedId(v.id)}
                     className={cn(
-                      "flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2.5 text-left transition",
+                      "flex flex-col items-start sm:flex-row sm:items-center justify-between gap-0.5 rounded-lg border px-2.5 py-2 sm:px-3 sm:py-2.5 text-left transition cursor-pointer",
                       active
                         ? "border-[#70cfa9] bg-[#194536] text-white"
                         : "border-white/10 bg-black/20 text-[#c4cec8] hover:border-white/25 hover:text-white",
                     )}
                   >
                     <span className="text-xs font-semibold text-white">{v.label}</span>
-                    <span className="font-mono text-xs font-bold text-[#f3c474]">
+                    <span className="font-mono text-[11px] sm:text-xs font-bold text-[#f3c474]">
                       {formatMoney(v.priceCents, currency, rates)}
                     </span>
                   </button>
@@ -193,10 +193,10 @@ export function HeroQuickOrder({
               })}
             </div>
 
-            <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3.5">
+            <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-3.5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-[11px] text-[#9cb0a6]">Selected Pack</p>
-                <p className="text-base font-bold text-white">
+                <p className="text-sm sm:text-base font-bold text-white">
                   {selected.label} ·{" "}
                   <span className="font-mono text-[#f3c474]">{formatMoney(selected.priceCents, currency, rates)}</span>
                 </p>
@@ -207,7 +207,7 @@ export function HeroQuickOrder({
                   type="button"
                   size="sm"
                   variant="secondary"
-                  className="border-white/20 bg-white/10 text-white hover:bg-white/15"
+                  className="flex-1 sm:flex-initial border-white/20 bg-white/10 text-white hover:bg-white/15"
                   onClick={() => {
                     add({
                       variantId: selected.id,
@@ -235,7 +235,7 @@ export function HeroQuickOrder({
                     });
                     router.push("/checkout");
                   }}
-                  className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-[#f3c474] px-4 text-xs font-bold text-[#1b1406] transition hover:bg-[#eab557]"
+                  className="inline-flex h-9 flex-1 sm:flex-initial cursor-pointer items-center justify-center gap-1.5 rounded-md bg-[#f3c474] px-4 text-xs font-bold text-[#1b1406] transition hover:bg-[#eab557]"
                 >
                   Buy Pack →
                 </button>

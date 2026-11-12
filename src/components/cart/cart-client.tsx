@@ -50,41 +50,45 @@ export function CartClient({ currency, rates }: { currency: CurrencyCode; rates:
         {lines.map((l) => {
           const unit = prices[l.variantId] ?? 0;
           return (
-            <Card key={l.variantId} className="flex items-center gap-4 p-4">
-              <ProductArt image={l.image} size="sm" className="h-16 w-16 shrink-0 rounded-xl" />
-              <div className="min-w-0 flex-1">
-                <Link href={`/product/${l.productSlug}`} className="font-display font-bold text-foreground hover:text-brand">
-                  {l.productName}
-                </Link>
-                <p className="text-xs text-muted">{l.variantLabel}</p>
-                <p className="mt-1 text-sm font-semibold text-brand">
-                  {unit ? formatMoney(unit, currency, rates) : "…"}
-                </p>
+            <Card key={l.variantId} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                <ProductArt image={l.image} size="sm" className="h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-xl" />
+                <div className="min-w-0 flex-1">
+                  <Link href={`/product/${l.productSlug}`} className="block truncate font-display text-sm sm:text-base font-bold text-foreground hover:text-brand">
+                    {l.productName}
+                  </Link>
+                  <p className="text-xs text-muted">{l.variantLabel}</p>
+                  <p className="mt-1 text-sm font-semibold text-brand">
+                    {unit ? formatMoney(unit, currency, rates) : "…"}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-between border-t border-border pt-2.5 sm:border-t-0 sm:pt-0 sm:justify-end gap-3">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    aria-label="Decrease quantity"
+                    onClick={() => setQty(l.variantId, l.quantity - 1)}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface-2"
+                  >
+                    <Minus className="h-3.5 w-3.5" />
+                  </button>
+                  <span className="w-7 text-center text-sm font-medium">{l.quantity}</span>
+                  <button
+                    aria-label="Increase quantity"
+                    onClick={() => setQty(l.variantId, l.quantity + 1)}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface-2"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                  </button>
+                </div>
                 <button
-                  aria-label="Decrease quantity"
-                  onClick={() => setQty(l.variantId, l.quantity - 1)}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface-2"
+                  aria-label="Remove item"
+                  onClick={() => remove(l.variantId)}
+                  className="p-1 text-muted hover:text-danger"
                 >
-                  <Minus className="h-3.5 w-3.5" />
-                </button>
-                <span className="w-7 text-center text-sm font-medium">{l.quantity}</span>
-                <button
-                  aria-label="Increase quantity"
-                  onClick={() => setQty(l.variantId, l.quantity + 1)}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface-2"
-                >
-                  <Plus className="h-3.5 w-3.5" />
+                  <Trash2 className="h-4 w-4" />
                 </button>
               </div>
-              <button
-                aria-label="Remove item"
-                onClick={() => remove(l.variantId)}
-                className="text-muted hover:text-danger"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
             </Card>
           );
         })}

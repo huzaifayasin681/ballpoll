@@ -108,7 +108,7 @@ async function HomeBody() {
 
       {/* 3. Curated 4-Card Featured Row */}
       <section>
-        <div className="mb-4 flex items-baseline justify-between">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
           <div>
             <h2 className="text-lg font-bold tracking-tight text-foreground">Featured Packages</h2>
             <p className="text-xs text-muted">Most ordered coins, cash, legendary cues and maxed accounts</p>

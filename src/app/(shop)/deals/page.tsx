@@ -39,15 +39,15 @@ async function DealsBody() {
       {sales.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2">
           {sales.map((s) => (
-            <Card key={s.id} className="flex items-center justify-between gap-4 border-accent-border bg-accent-soft p-6">
+            <Card key={s.id} className="flex flex-col items-start justify-between gap-4 border-accent-border bg-accent-soft p-4 sm:flex-row sm:items-center sm:p-6">
               <div>
                 <Badge tone="gold">
                   <Flame className="h-3 w-3" /> {s.percentOff}% OFF
                 </Badge>
-                <h2 className="mt-2 font-display text-xl font-bold text-foreground">{s.title}</h2>
-                <p className="text-sm text-muted">{s.subtitle}</p>
+                <h2 className="mt-2 font-display text-lg sm:text-xl font-bold text-foreground">{s.title}</h2>
+                <p className="text-xs sm:text-sm text-muted">{s.subtitle}</p>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <p className="mb-1 text-xs text-muted">Ends in</p>
                 <Countdown endsAt={s.endsAt.toISOString()} />
               </div>

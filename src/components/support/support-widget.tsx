@@ -39,9 +39,9 @@ export function SupportWidget() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-40">
+    <div className="fixed bottom-4 right-4 z-40 max-w-[calc(100vw-2rem)]">
       {open ? (
-        <div className="w-80 sm:w-96 overflow-hidden rounded-lg border border-border bg-surface shadow-xl">
+        <div className="w-[calc(100vw-2rem)] max-w-96 overflow-hidden rounded-lg border border-border bg-surface shadow-xl">
           <div className="flex items-center justify-between border-b border-border bg-[#141413] px-4 py-2.5 text-white">
             <div className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4 text-[#5ec29f]" />
