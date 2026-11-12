@@ -1,0 +1,358 @@
+// GlobalPoolStore data model
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────── Users & Auth ─────────────────────────
+
+enum Role {
+  CUSTOMER
+  SUPPORT
+  BOOSTER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  googleId      String?   @unique
+  role          Role      @default(CUSTOMER)
+  currency      String    @default("USD")
+  referralCode  String    @unique
+  referredById  String?
+  referredBy    User?     @relation("Referrals", fields: [referredById], references: [id])
+  referrals     User[]    @relation("Referrals")
+  points        Int       @default(0) // loyalty points balance
+  lifetimeSpend Int       @default(0) // in USD cents, drives tier
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  orders        Order[]   @relation("CustomerOrders")
+  assigned      Order[]   @relation("AssignedOrders")
+  gameIds       SavedGameId[]
+  ledger        LedgerEntry[]
+  reviews       Review[]
+  tickets       SupportTicket[]
+  auditLogs     AuditLog[]
+}
+
+model SavedGameId {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  uniqueId  String // Miniclip Unique ID (never a password)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, uniqueId])
+}
+
+// ───────────────────────── Catalog ─────────────────────────
+
+enum ProductType {
+  CURRENCY
+  ITEM
+  ACCOUNT
+  SERVICE
+  LICENSE_KEY
+}
+
+enum DeliveryMode {
+  INSTANT
+  MANUAL
+}
+
+/// What the customer must provide at checkout.
+enum RequiredInput {
+  UNIQUE_ID
+  CREDENTIALS
+  NONE
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  tagline     String
+  description String
+  icon        String // lucide icon name
+  sortOrder   Int       @default(0)
+  products    Product[]
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  name          String
+  shortDesc     String
+  description   String
+  categoryId    String
+  category      Category      @relation(fields: [categoryId], references: [id])
+  type          ProductType
+  deliveryMode  DeliveryMode  @default(MANUAL)
+  requiredInput RequiredInput @default(UNIQUE_ID)
+  deliveryHours Int           @default(24) // estimated hours to deliver
+  region        String        @default("Global")
+  image         String // gradient/emoji key or URL
+  badge         String?
+  featured      Boolean       @default(false)
+  isActive      Boolean       @default(true)
+  metaTitle     String?
+  metaDesc      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  variants      ProductVariant[]
+  reviews       Review[]
+  account       AccountListing?
+}
+
+model ProductVariant {
+  id           String      @id @default(cuid())
+  productId    String
+  product      Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label        String // e.g. "50M Coins"
+  priceCents   Int // base price, USD cents
+  compareCents Int? // strike-through price
+  stock        Int         @default(-1) // -1 = unlimited
+  isActive     Boolean     @default(true)
+  sortOrder    Int         @default(0)
+
+  orderItems   OrderItem[]
+  licenseKeys  LicenseKey[]
+}
+
+model AccountListing {
+  id         String   @id @default(cuid())
+  productId  String   @unique
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  level      Int
+  winRate    Float
+  coins      String // display string, e.g. "12.4B"
+  cash       Int
+  cues       String[]
+  rings      String[]
+  sold       Boolean  @default(false)
+}
+
+model LicenseKey {
+  id          String         @id @default(cuid())
+  variantId   String
+  variant     ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  keyEnc      String // AES-256-GCM encrypted
+  orderItemId String?        @unique
+  orderItem   OrderItem?     @relation(fields: [orderItemId], references: [id])
+  createdAt   DateTime       @default(now())
+}
+
+model FlashSale {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String
+  percentOff  Int
+  productSlug String?
+  startsAt    DateTime
+  endsAt      DateTime
+  isActive    Boolean  @default(true)
+}
+
+model Coupon {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  percentOff Int
+  maxUses    Int?
+  uses       Int       @default(0)
+  expiresAt  DateTime?
+  isActive   Boolean   @default(true)
+}
+
+model Banner {
+  id        String  @id @default(cuid())
+  title     String
+  subtitle  String
+  ctaLabel  String
+  ctaHref   String
+  theme     String  @default("emerald")
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+}
+
+// ───────────────────────── Orders ─────────────────────────
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  COMPLETED
+  REFUNDED
+  CANCELLED
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  trackingId    String        @unique // public, e.g. GPS-7F3K9Q
+  userId        String?
+  user          User?         @relation("CustomerOrders", fields: [userId], references: [id])
+  email         String
+  country       String?
+  gameUniqueId  String?
+  currency      String        @default("USD")
+  fxRate        Float         @default(1)
+  subtotalCents Int
+  discountCents Int           @default(0)
+  totalCents    Int
+  couponCode    String?
+  pointsUsed    Int           @default(0)
+  status        OrderStatus   @default(PENDING_PAYMENT)
+  paymentMethod String?
+  assignedToId  String?
+  assignedTo    User?         @relation("AssignedOrders", fields: [assignedToId], references: [id])
+  staffNote     String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  items         OrderItem[]
+  events        OrderEvent[]
+  credential    OrderCredential?
+  payments      Payment[]
+}
+
+model OrderItem {
+  id         String         @id @default(cuid())
+  orderId    String
+  order      Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId  String
+  variant    ProductVariant @relation(fields: [variantId], references: [id])
+  name       String // snapshot
+  quantity   Int
+  unitCents  Int
+  licenseKey LicenseKey?
+}
+
+model OrderEvent {
+  id        String      @id @default(cuid())
+  orderId   String
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    OrderStatus
+  message   String
+  createdAt DateTime    @default(now())
+}
+
+/// Encrypted game-login vault. Purged after completion.
+model OrderCredential {
+  id         String    @id @default(cuid())
+  orderId    String    @unique
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  loginEnc   String
+  secretEnc  String
+  purgeAfter DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  gateway     String
+  externalId  String   @unique
+  amountCents Int
+  currency    String
+  status      String
+  raw         Json?
+  createdAt   DateTime @default(now())
+}
+
+// ───────────────────────── Loyalty & Referral ─────────────────────────
+
+enum LedgerType {
+  EARN_PURCHASE
+  REDEEM
+  REFERRAL_COMMISSION
+  ADJUSTMENT
+}
+
+model LedgerEntry {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      LedgerType
+  points    Int // + earn / - spend
+  note      String
+  orderId   String?
+  createdAt DateTime   @default(now())
+}
+
+// ───────────────────────── Content & Support ─────────────────────────
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  author    String
+  country   String
+  rating    Int
+  body      String
+  verified  Boolean  @default(false)
+  approved  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  body        String // markdown
+  category    String
+  readMinutes Int      @default(5)
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FaqItem {
+  id        String @id @default(cuid())
+  question  String
+  answer    String
+  category  String
+  sortOrder Int    @default(0)
+}
+
+enum TicketStatus {
+  OPEN
+  ANSWERED
+  CLOSED
+}
+
+model SupportTicket {
+  id         String       @id @default(cuid())
+  userId     String?
+  user       User?        @relation(fields: [userId], references: [id])
+  name       String
+  email      String
+  subject    String
+  message    String
+  trackingId String?
+  status     TicketStatus @default(OPEN)
+  createdAt  DateTime     @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  action    String
+  target    String
+  createdAt DateTime @default(now())
+}
