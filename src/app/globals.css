@@ -163,3 +163,117 @@ html.dark body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@keyframes gps-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gps-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes gps-float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(14px, -16px, 0) scale(1.06);
+  }
+}
+
+@keyframes gps-fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes gps-shimmer-sweep {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  55%,
+  100% {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+@keyframes gps-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gps-ken-burns {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate3d(-1%, -1%, 0);
+  }
+}
+
+.animate-gps-spin {
+  animation: gps-spin-slow 5s linear infinite;
+}
+
+.animate-gps-spin-reverse {
+  animation: gps-spin-reverse 3.5s linear infinite;
+}
+
+.animate-gps-float {
+  animation: gps-float-slow 7s ease-in-out infinite;
+}
+
+.animate-gps-slide-up {
+  animation: gps-fade-slide-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-gps-shimmer {
+  animation: gps-shimmer-sweep 3.4s ease-in-out infinite;
+}
+
+.animate-gps-progress {
+  transform-origin: left center;
+  animation: gps-progress-fill 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-gps-progress-4s {
+  transform-origin: left center;
+  animation: gps-progress-fill 4s linear forwards;
+}
+
+.animate-gps-ken-burns {
+  animation: gps-ken-burns 5s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gps-spin,
+  .animate-gps-spin-reverse,
+  .animate-gps-float,
+  .animate-gps-slide-up,
+  .animate-gps-shimmer,
+  .animate-gps-progress,
+  .animate-gps-progress-4s,
+  .animate-gps-ken-burns {
+    animation: none !important;
+  }
+}

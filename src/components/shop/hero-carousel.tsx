@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ShieldCheck, ShoppingCart, Sparkles, Zap } from "lucide-react";
@@ -10,6 +10,25 @@ import { formatMoney, type CurrencyCode, type Rates } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 type QuickVariant = { id: string; label: string; priceCents: number };
+
+const HERO_ROTATING_SLIDES = [
+  {
+    badge: "#1 8 Ball Pool Marketplace",
+    headline: "Maxed Gear & Coins.",
+  },
+  {
+    badge: "1–2h Unique ID Transfer",
+    headline: "20/20 Legendary Cues.",
+  },
+  {
+    badge: "100% Hand-Played Pros",
+    headline: "Berlin & Venice Rings.",
+  },
+  {
+    badge: "Up to 40% Off Combos",
+    headline: "Pro Aim Assist Keys.",
+  },
+] as const;
 
 const heroShowcaseCards = [
   {
@@ -44,9 +63,38 @@ export function HeroQuickOrder({
   const variants = coinProduct?.variants.slice(0, 6) ?? [];
   const [selectedId, setSelectedId] = useState(variants[2]?.id ?? variants[0]?.id ?? "");
   const [justAdded, setJustAdded] = useState(false);
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [activeCardIdx, setActiveCardIdx] = useState(0);
+  const [cardsPaused, setCardsPaused] = useState(false);
   const { add } = useCart();
   const router = useRouter();
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
+
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const timer = window.setInterval(() => {
+      setPhraseIdx((i) => (i + 1) % HERO_ROTATING_SLIDES.length);
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || cardsPaused) return;
+
+    const timer = window.setInterval(() => {
+      setActiveCardIdx((i) => (i + 1) % heroShowcaseCards.length);
+    }, 2600);
+    return () => window.clearInterval(timer);
+  }, [cardsPaused]);
+
+  const currentSlide = HERO_ROTATING_SLIDES[phraseIdx];
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] text-[#f5f3ed] shadow-lg ring-1 ring-white/5">
@@ -65,29 +113,38 @@ export function HeroQuickOrder({
           <source src="/videos/instant-coin-topups.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-r from-[#06140f]/95 via-[#091f17]/88 to-[#071812]/92" />
-        <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#24916a]/20 blur-3xl" />
-        <div className="absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-[#f3c474]/15 blur-3xl" />
+        <div className="animate-gps-float absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#24916a]/25 blur-3xl" />
+        <div
+          className="animate-gps-float absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-[#f3c474]/20 blur-3xl"
+          style={{ animationDelay: "1.8s" }}
+        />
       </div>
 
       {/* Main Hero Content Grid */}
       <div className="relative z-10 grid items-center gap-8 p-5 sm:gap-10 sm:p-10 lg:grid-cols-12 lg:p-12">
         {/* Left: Headline, Interactive Category Previews & Actions */}
         <div className="lg:col-span-7">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-[#68d8ae]/30 bg-[#0d2d22]/85 py-1 pl-1.5 pr-3.5 shadow-sm backdrop-blur-md">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-[#68d8ae]/35 bg-[#0d2d22]/85 py-1 pl-1.5 pr-3.5 shadow-sm backdrop-blur-md">
             <img
               src="/images/pool/logo-8ball.jpg"
               alt="8 Ball Pool"
               className="h-6 w-6 rounded-full border border-white/20 object-cover"
             />
-            <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#68d8ae]">
-              #1 8 Ball Pool Marketplace
+            <span
+              key={currentSlide.badge}
+              className="animate-gps-slide-up font-mono text-[11px] font-bold uppercase tracking-widest text-[#68d8ae]"
+            >
+              {currentSlide.badge}
             </span>
           </div>
 
           <h1 className="mt-4 max-w-xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl sm:leading-[1.08]">
             Dominate Every Table with{" "}
-            <span className="bg-gradient-to-r from-[#f8d896] via-[#f3c474] to-[#e2a33b] bg-clip-text text-transparent">
-              Maxed Gear &amp; Coins.
+            <span
+              key={currentSlide.headline}
+              className="animate-gps-slide-up inline-block bg-gradient-to-r from-[#f8d896] via-[#f3c474] to-[#e2a33b] bg-clip-text text-transparent"
+            >
+              {currentSlide.headline}
             </span>
           </h1>
 
@@ -96,34 +153,69 @@ export function HeroQuickOrder({
           </p>
 
           {/* Interactive 3-Card Real 8 Ball Pool Showcase Strip */}
-          <div className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-            {heroShowcaseCards.map((card) => (
-              <Link
-                key={card.title}
-                href={card.href}
-                className="group flex items-center gap-2.5 rounded-xl border border-white/12 bg-black/40 p-2 pr-3 backdrop-blur-md transition-all duration-200 hover:border-[#f3c474]/50 hover:bg-black/60"
-              >
-                <div className="relative h-11 w-14 shrink-0 overflow-hidden rounded-lg border border-white/15">
-                  <img
-                    src={card.src}
-                    alt={card.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <p className="truncate text-xs font-bold text-white group-hover:text-[#f3c474]">{card.title}</p>
-                  <p className="truncate text-[10px] text-[#9eb2a8]">{card.sub}</p>
-                </div>
-              </Link>
-            ))}
+          <div
+            className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-3"
+            onMouseEnter={() => setCardsPaused(true)}
+            onMouseLeave={() => setCardsPaused(false)}
+          >
+            {heroShowcaseCards.map((card, idx) => {
+              const isSpotlight = idx === activeCardIdx;
+              return (
+                <Link
+                  key={card.title}
+                  href={card.href}
+                  onMouseEnter={() => setActiveCardIdx(idx)}
+                  className={cn(
+                    "group relative flex items-center gap-2.5 overflow-hidden rounded-xl border p-2 pr-3 backdrop-blur-md transition-all duration-300",
+                    isSpotlight
+                      ? "-translate-y-0.5 border-[#f3c474]/70 bg-black/65 shadow-md ring-1 ring-[#f3c474]/30"
+                      : "border-white/12 bg-black/40 hover:border-[#f3c474]/50 hover:bg-black/60",
+                  )}
+                >
+                  <div className="relative h-11 w-14 shrink-0 overflow-hidden rounded-lg border border-white/15">
+                    <img
+                      src={card.src}
+                      alt={card.title}
+                      className={cn(
+                        "h-full w-full object-cover transition-transform duration-500",
+                        isSpotlight ? "scale-110" : "group-hover:scale-110",
+                      )}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p
+                      className={cn(
+                        "truncate text-xs font-bold transition-colors",
+                        isSpotlight ? "text-[#f3c474]" : "text-white group-hover:text-[#f3c474]",
+                      )}
+                    >
+                      {card.title}
+                    </p>
+                    <p className="truncate text-[10px] text-[#9eb2a8]">{card.sub}</p>
+                  </div>
+                  {isSpotlight && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#68d8ae] shadow-[0_0_8px_#68d8ae]"
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
               href="/store"
-              className="inline-flex h-11 flex-1 sm:flex-initial items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-6 text-xs sm:text-sm font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
+              className="relative inline-flex h-11 flex-1 sm:flex-initial items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-6 text-xs sm:text-sm font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
             >
-              Browse Full Catalog <ArrowRight className="h-4 w-4" />
+              <span
+                aria-hidden="true"
+                className="animate-gps-shimmer pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/45 to-transparent"
+              />
+              <span className="relative z-10 inline-flex items-center gap-2">
+                Browse Full Catalog <ArrowRight className="h-4 w-4" />
+              </span>
             </Link>
             <Link
               href="/deals"
@@ -167,7 +259,8 @@ export function HeroQuickOrder({
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-sm sm:text-base font-bold text-white">Express Coin Top-Up</h2>
-                    <span className="rounded-full bg-[#194d3b] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-[#68d8ae]">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#194d3b] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-[#68d8ae]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#68d8ae] animate-ping" />
                       Instant Queue
                     </span>
                   </div>

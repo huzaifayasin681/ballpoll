@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { ArrowRight, ArrowUpRight, CheckCircle2, KeyRound, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CheckCircle2, Sparkles } from "lucide-react";
 import { Badge, Card, Container, PageFallback, SectionHeading, Stars } from "@/components/ui/primitives";
 import { buttonClass } from "@/components/ui/button";
 import { ShowcaseVideo } from "@/components/ui/showcase-video";
 import { HeroQuickOrder } from "@/components/shop/hero-carousel";
+import { AnimatedDeliverySteps, LiveSpotlightCarousel } from "@/components/shop/landing-dynamic-showcase";
 import { LiveOrderTicker } from "@/components/shop/live-ticker";
 import { ProductCard } from "@/components/shop/product-card";
 import { LegendaryCuesShop } from "@/components/shop/legendary-cues-shop";
@@ -193,6 +194,9 @@ async function HomeBody() {
         </div>
       </section>
 
+      {/* 2A-0. Auto-Rotating Live Marketplace Spotlight */}
+      <LiveSpotlightCarousel />
+
       {/* 2A. Instant Coin & Cash Top-Ups + Elite Players Edition Video Showcase */}
       <section aria-labelledby="live-showcase-heading">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
@@ -332,44 +336,7 @@ async function HomeBody() {
             Live Order Tracker →
           </Link>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              step: "01",
-              Icon: KeyRound,
-              title: "Pick Your Pack & Enter Unique ID",
-              body: "For coin, cash, and VIP key orders, only your 10-digit Miniclip Unique ID is needed—no password required.",
-            },
-            {
-              step: "02",
-              Icon: ShieldCheck,
-              title: "Instant Encrypted Checkout",
-              body: "Pay with card, Apple/Google Pay, PayPal, or USDT/BTC. Credentials for cue/ring boosts are AES-256 encrypted.",
-            },
-            {
-              step: "03",
-              Icon: Zap,
-              title: "1–2 Hour Transfer & Live Tracking",
-              body: "Follow your order in real time from Queued → In Progress → Delivered with instant email confirmation.",
-            },
-          ].map(({ step, Icon, title, body }) => (
-            <div
-              key={step}
-              className="relative flex flex-col justify-between rounded-xl border border-border bg-background/60 p-5"
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-border bg-brand-soft text-brand">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span className="font-mono text-xs font-extrabold text-muted">STEP {step}</span>
-                </div>
-                <h3 className="mt-4 text-sm sm:text-base font-bold text-foreground">{title}</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted">{body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <AnimatedDeliverySteps />
       </section>
 
       {/* 5. Verified Reviews & Dark-Emerald Welcome Offer Banner */}
