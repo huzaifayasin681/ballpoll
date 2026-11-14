@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Sparkles, ShieldCheck, Zap, Coins } from "lucide-react";
 import { Card, Container, Input, PageFallback, Select } from "@/components/ui/primitives";
 import { ShowcaseVideo } from "@/components/ui/showcase-video";
+import { WhatsAppCta } from "@/components/ui/whatsapp-cta";
 import { Button, buttonClass } from "@/components/ui/button";
 import { ProductCard } from "@/components/shop/product-card";
 import { LegendaryCuesShop } from "@/components/shop/legendary-cues-shop";
@@ -133,6 +134,15 @@ export async function StoreView({
                   <ShieldCheck className="h-3.5 w-3.5 text-[#68d8ae]" /> Unique ID Only · Ban-Safe
                 </span>
               </div>
+              <div className="mt-4">
+                <WhatsAppCta
+                  message={`Hi ${site.name}! I want to buy 8 Ball Pool Coins & Cash via Unique ID.`}
+                  label="WhatsApp"
+                  showNumber
+                  size="sm"
+                  className="h-10 rounded-xl px-4 text-xs"
+                />
+              </div>
             </div>
             <div className="lg:col-span-6">
               <div className="relative overflow-hidden rounded-xl border border-[#f3c474]/35 bg-black/50 shadow-2xl ring-1 ring-white/10">
@@ -169,8 +179,17 @@ export async function StoreView({
                   : "Filter by department, asset type, delivery speed, or price. Every order includes live status tracking."}
               </p>
             </div>
-            <div className="shrink-0 font-mono text-xs text-[#f3c474]">
-              Showing <strong>{products.length}</strong> available packages
+            <div className="flex flex-col items-start gap-2.5 sm:items-end">
+              <div className="shrink-0 font-mono text-xs text-[#f3c474]">
+                Showing <strong>{products.length}</strong> available packages
+              </div>
+              <WhatsAppCta
+                message={`Hi ${site.name}! I'm browsing ${currentCat ? currentCat.name : "the catalog"} and need assistance.`}
+                label="WhatsApp"
+                showNumber
+                size="sm"
+                className="rounded-lg"
+              />
             </div>
           </div>
         </div>

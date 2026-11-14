@@ -5,6 +5,7 @@ import { ArrowRight, ArrowUpRight, CheckCircle2, Sparkles } from "lucide-react";
 import { Badge, Card, Container, PageFallback, SectionHeading, Stars } from "@/components/ui/primitives";
 import { buttonClass } from "@/components/ui/button";
 import { ShowcaseVideo } from "@/components/ui/showcase-video";
+import { WhatsAppCta } from "@/components/ui/whatsapp-cta";
 import { HeroQuickOrder } from "@/components/shop/hero-carousel";
 import { AnimatedDeliverySteps, LiveSpotlightCarousel } from "@/components/shop/landing-dynamic-showcase";
 import { LiveOrderTicker } from "@/components/shop/live-ticker";
@@ -155,9 +156,17 @@ async function HomeBody() {
             title="Shop by Category"
             subtitle="Direct Unique ID top-ups, 20/20 Legendary Cues, maxed accounts & ring boosting"
           />
-          <Link href="/store" className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline">
-            Explore Full Catalog <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link href="/store" className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline">
+              Explore Full Catalog <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <WhatsAppCta
+              message={`Hi ${site.name}! Help me pick the right 8 Ball Pool package.`}
+              label="WhatsApp"
+              size="sm"
+              className="h-8 rounded-lg px-3 text-[11px]"
+            />
+          </div>
         </div>
         <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5">
           {categories.map((c) => {
@@ -231,12 +240,21 @@ async function HomeBody() {
                   Zero password required—enter your 10-digit Miniclip Unique ID and track delivery live.
                 </p>
               </div>
-              <Link
-                href="/store/coins-cash"
-                className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-4 text-xs font-bold text-[#1b1406] shadow-xs transition hover:brightness-105"
-              >
-                Top Up Now <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              <div className="flex flex-wrap items-center gap-2">
+                <Link
+                  href="/store/coins-cash"
+                  className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-4 text-xs font-bold text-[#1b1406] shadow-xs transition hover:brightness-105"
+                >
+                  Top Up Now <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <WhatsAppCta
+                  message={`Hi ${site.name}! I want an instant 8 Ball Pool Coins & Cash top-up.`}
+                  label="WhatsApp"
+                  showNumber
+                  size="sm"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
           </div>
 
@@ -249,16 +267,19 @@ async function HomeBody() {
                 aspect="portrait"
               />
             </div>
-            <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/10 pt-3">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#f3c474]">
                   Elite Players Edition
                 </p>
                 <p className="truncate text-sm font-bold text-white">Pro Match &amp; Ring Action</p>
               </div>
-              <Link href="/reviews" className="shrink-0 text-xs font-semibold text-[#68d8ae] hover:underline">
-                Reviews →
-              </Link>
+              <WhatsAppCta
+                message={`Hi ${site.name}! I saw the Elite Players Edition showcase and want to order.`}
+                label="WhatsApp"
+                size="sm"
+                className="h-8 rounded-lg px-3 text-[11px]"
+              />
             </div>
           </div>
         </div>
@@ -313,9 +334,17 @@ async function HomeBody() {
             title="Featured 8 Ball Pool Packages"
             subtitle="Most ordered coins, cash, legendary cues and championship accounts"
           />
-          <Link href="/store" className={buttonClass("secondary", "sm")}>
-            View All {totalProducts} Products <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/store" className={buttonClass("secondary", "sm")}>
+              View All {totalProducts} Products <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <WhatsAppCta
+              message={`Hi ${site.name}! I want to order one of your Featured 8 Ball Pool Packages.`}
+              label="WhatsApp"
+              size="sm"
+              className="h-8 rounded-lg px-3 text-[11px]"
+            />
+          </div>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((p) => (
@@ -332,9 +361,18 @@ async function HomeBody() {
             title="How 8 Ball Pool Delivery Works"
             subtitle="Streamlined fulfillment designed for zero downtime and complete account safety"
           />
-          <Link href="/track" className="text-xs font-bold text-brand hover:underline">
-            Live Order Tracker →
-          </Link>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link href="/track" className="text-xs font-bold text-brand hover:underline">
+              Live Order Tracker →
+            </Link>
+            <WhatsAppCta
+              message={`Hi ${site.name}! I have a question about order delivery or tracking.`}
+              label="WhatsApp"
+              showNumber
+              size="sm"
+              className="h-8 rounded-lg px-3 text-[11px]"
+            />
+          </div>
         </div>
         <AnimatedDeliverySteps />
       </section>
@@ -347,9 +385,17 @@ async function HomeBody() {
               <h2 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">Verified Player Reviews</h2>
               <p className="text-xs text-muted">Rated 4.9/5 across thousands of 8 Ball Pool deliveries</p>
             </div>
-            <Link href="/reviews" className="text-xs font-bold text-brand hover:underline">
-              All Reviews →
-            </Link>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <Link href="/reviews" className="text-xs font-bold text-brand hover:underline">
+                All Reviews →
+              </Link>
+              <WhatsAppCta
+                message={`Hi ${site.name}! I want to place an order on WhatsApp.`}
+                label="WhatsApp"
+                size="sm"
+                className="h-8 rounded-lg px-3 text-[11px]"
+              />
+            </div>
           </div>
           <div className="grid gap-3.5 sm:grid-cols-3">
             {reviews.map((r) => (
@@ -398,13 +444,20 @@ async function HomeBody() {
             </p>
           </div>
 
-          <div className="relative z-10 mt-6 flex flex-wrap items-center gap-3">
+          <div className="relative z-10 mt-6 flex flex-wrap items-center gap-2.5">
             <Link
               href="/deals"
               className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-4 text-xs font-bold text-[#1b1406] shadow-xs transition hover:brightness-105"
             >
               Claim Offer <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+            <WhatsAppCta
+              message={`Hi ${site.name}! I'd like to claim the WELCOME10 offer and order on WhatsApp.`}
+              label="WhatsApp"
+              showNumber
+              size="sm"
+              className="rounded-lg"
+            />
             <Link href="/rewards" className="text-xs font-semibold text-[#68d8ae] hover:underline">
               Loyalty Program →
             </Link>

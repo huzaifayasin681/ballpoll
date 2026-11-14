@@ -11,9 +11,28 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
+import { WhatsAppCta } from "@/components/ui/whatsapp-cta";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const SPOTLIGHT_SLIDES = [
+type SpotlightSlide = {
+  id: string;
+  tab: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  ctaLine?: string;
+  durations?: readonly string[];
+  statLabel: string;
+  statValue: string;
+  badge: string;
+  image: string;
+  href: string;
+  cta: string;
+  whatsappMessage: string;
+};
+
+const SPOTLIGHT_SLIDES: readonly SpotlightSlide[] = [
   {
     id: "coins",
     tab: "Coins & Cash",
@@ -27,6 +46,7 @@ const SPOTLIGHT_SLIDES = [
     image: "/images/pool/instant-coin-topups.jpg",
     href: "/store/coins-cash",
     cta: "Shop Coins & Cash",
+    whatsappMessage: `Hi ${site.name}! I want to order 8 Ball Pool Coins & Cash via Unique ID.`,
   },
   {
     id: "cues",
@@ -41,6 +61,7 @@ const SPOTLIGHT_SLIDES = [
     image: "/images/pool/legendary-cues-maxed.jpg",
     href: "/store/cues-unlocks",
     cta: "Explore Legendary Cues",
+    whatsappMessage: `Hi ${site.name}! I want to unlock Maxed Legendary Cues in 8 Ball Pool.`,
   },
   {
     id: "boosting",
@@ -55,20 +76,24 @@ const SPOTLIGHT_SLIDES = [
     image: "/images/pool/pro-account-boosting.jpg",
     href: "/store/boosting",
     cta: "Book Ring Boost",
+    whatsappMessage: `Hi ${site.name}! I want to book 8 Ball Pool Account Boosting / Ring Grinding.`,
   },
   {
     id: "assist",
     tab: "Aim Assist VIP",
-    eyebrow: "PRECISION GUIDELINES",
-    title: "Extended Cushion Shot Lines & VIP Keys",
+    eyebrow: "100% WINNING MODE",
+    title: "ADVANCED GAMEPLAY ASSIST TOOLS AND ALL HACKS MODE OF 100% WINNING",
     description:
-      "Instant license key delivery for Weekly Pass, Monthly VIP, and Ultimate Season Pass with 24/7 anti-ban updates.",
-    statLabel: "Key Activation",
-    statValue: "Instant",
-    badge: "VIP ACCESS",
+      "We provide all advanced gameplay assist tools and hacks that you can purchase for 1 Day, 1 Week, 1 Month, 6 Months, 1 Year, or even Lifetime access. We guarantee that these tools will never stop working, and our surety is that you won’t lose a single match while using them.",
+    ctaLine: "To get yours now, contact us on the number given below or click below to buy instantly!",
+    durations: ["1 Day", "1 Week", "1 Month", "6 Months", "1 Year", "Lifetime"],
+    statLabel: "Match Surety",
+    statValue: "100% Win Rate",
+    badge: "NEVER STOPS WORKING",
     image: "/images/pool/gameplay-assist-tools.jpg",
     href: "/store/vip-access",
-    cta: "Get VIP Access Key",
+    cta: "Buy Instantly",
+    whatsappMessage: `Hi ${site.name}! I want to get Advanced Gameplay Assist Tools & 100% Winning Mode (1 Day / 1 Week / 1 Month / 6 Months / 1 Year / Lifetime).`,
   },
   {
     id: "bundles",
@@ -83,8 +108,9 @@ const SPOTLIGHT_SLIDES = [
     image: "/images/pool/combo-bundles-deals.jpg",
     href: "/deals",
     cta: "Claim Combo Deals",
+    whatsappMessage: `Hi ${site.name}! I want to order a discounted Combo Bundle.`,
   },
-] as const;
+];
 
 /**
  * Auto-rotating marketplace spotlight banner on the landing page with
@@ -102,7 +128,7 @@ export function LiveSpotlightCarousel() {
 
     const id = window.setInterval(() => {
       setIndex((prev) => (prev + 1) % SPOTLIGHT_SLIDES.length);
-    }, 4000);
+    }, 4500);
     return () => window.clearInterval(id);
   }, [paused]);
 
@@ -170,14 +196,33 @@ export function LiveSpotlightCarousel() {
             </span>
           </div>
 
-          <h2 className="mt-3.5 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+          <h2 className="mt-3.5 text-xl font-extrabold tracking-tight text-white sm:text-2xl lg:text-[1.75rem] lg:leading-tight">
             {slide.title}
           </h2>
-          <p className="mt-2 max-w-xl text-xs leading-relaxed text-[#c6d3cd] sm:text-sm">
+          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#c6d3cd] sm:text-sm">
             {slide.description}
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          {slide.durations && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {slide.durations.map((dur) => (
+                <span
+                  key={dur}
+                  className="rounded-md border border-[#f3c474]/35 bg-black/45 px-2.5 py-1 font-mono text-[10px] font-bold text-[#f3c474]"
+                >
+                  {dur}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {slide.ctaLine && (
+            <p className="mt-2.5 text-xs font-semibold text-[#68d8ae]">
+              {slide.ctaLine}
+            </p>
+          )}
+
+          <div className="mt-4 flex flex-wrap items-center gap-2.5">
             <Link
               href={slide.href}
               className="relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-5 text-xs font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
@@ -190,6 +235,14 @@ export function LiveSpotlightCarousel() {
                 {slide.cta} <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </Link>
+
+            <WhatsAppCta
+              message={slide.whatsappMessage}
+              label="WhatsApp"
+              showNumber
+              size="sm"
+              className="h-10 rounded-xl px-4 text-xs"
+            />
 
             <div className="rounded-xl border border-white/10 bg-black/35 px-3.5 py-1.5">
               <p className="text-[10px] uppercase tracking-wider text-[#9eb2a8]">{slide.statLabel}</p>
@@ -244,7 +297,7 @@ export function LiveSpotlightCarousel() {
         </div>
       </div>
 
-      {/* Bottom 4-second slide progress indicator */}
+      {/* Bottom slide progress indicator */}
       <div className="relative z-10 grid grid-cols-5 gap-1.5 px-5 pb-4 sm:px-7">
         {SPOTLIGHT_SLIDES.map((s, idx) => (
           <button

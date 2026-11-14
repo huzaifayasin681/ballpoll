@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ShieldCheck, ShoppingCart, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { WhatsAppCta } from "@/components/ui/whatsapp-cta";
 import { useCart } from "@/components/cart/cart-context";
 import { formatMoney, type CurrencyCode, type Rates } from "@/lib/currency";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type QuickVariant = { id: string; label: string; priceCents: number };
@@ -223,6 +225,12 @@ export function HeroQuickOrder({
             >
               <Sparkles className="h-4 w-4 text-[#f3c474]" /> Flash Deals
             </Link>
+            <WhatsAppCta
+              message={`Hi ${site.name}! I want to order 8 Ball Pool coins, cues, or VIP tools.`}
+              label="WhatsApp"
+              showNumber
+              className="w-full sm:w-auto"
+            />
           </div>
 
           {/* 3-stat trust bar */}

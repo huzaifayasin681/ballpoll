@@ -20,6 +20,7 @@ import { useCart } from "@/components/cart/cart-context";
 import { Button } from "@/components/ui/button";
 import { Badge, Card, Input } from "@/components/ui/primitives";
 import { ShowcaseVideo } from "@/components/ui/showcase-video";
+import { WhatsAppCta } from "@/components/ui/whatsapp-cta";
 import { formatMoney, type CurrencyCode, type Rates } from "@/lib/currency";
 import type { LegendaryPackItem } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
@@ -196,6 +197,22 @@ export function LegendaryCuesShop({
               <span className="inline-flex items-center gap-1.5">
                 <Lock className="h-3.5 w-3.5 text-[#68d8ae]" /> AES-256 Encrypted Vault
               </span>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2.5">
+              <Link
+                href="/store/cues-unlocks"
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-5 text-xs font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
+              >
+                Buy Cues Instantly <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <WhatsAppCta
+                message={`Hi ${siteName}! I want to unlock Maxed Legendary Cues in 8 Ball Pool.`}
+                label="WhatsApp"
+                showNumber
+                size="sm"
+                className="h-10 rounded-xl px-4 text-xs"
+              />
             </div>
           </div>
 

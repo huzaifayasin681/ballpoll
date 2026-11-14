@@ -17,14 +17,25 @@ import { useCart } from "@/components/cart/cart-context";
 import { Button } from "@/components/ui/button";
 import { Badge, Card } from "@/components/ui/primitives";
 import { ShowcaseVideo } from "@/components/ui/showcase-video";
+import { WhatsAppCta } from "@/components/ui/whatsapp-cta";
 import { formatMoney, type CurrencyCode, type Rates } from "@/lib/currency";
 import type { LegendaryPackItem } from "@/lib/catalog";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+const ASSIST_ACCESS_DURATIONS = [
+  "1 Day",
+  "1 Week",
+  "1 Month",
+  "6 Months",
+  "1 Year",
+  "Lifetime",
+] as const;
+
 const ASSIST_HIGHLIGHTS = [
-  { label: "Guideline", value: "EXTENDED" },
-  { label: "Bank Shots", value: "CUSHION" },
-  { label: "Key Delivery", value: "INSTANT" },
+  { label: "Win Surety", value: "100% WIN" },
+  { label: "Uptime", value: "NEVER STOPS" },
+  { label: "Access Plans", value: "1D → LIFETIME" },
   { label: "VIP Desk", value: "24 / 7" },
 ] as const;
 
@@ -138,20 +149,32 @@ export function GameplayAssistShop({
 
             <Heading
               id="gameplay-assist-heading"
-              className="mt-3.5 text-2xl font-extrabold tracking-tight text-white sm:text-3xl lg:text-[2rem] lg:leading-[1.15]"
+              className="mt-3.5 text-xl font-extrabold tracking-tight text-white sm:text-2xl lg:text-[1.75rem] lg:leading-[1.15]"
             >
-              8 Ball Pool Pro Aim Assist{" "}
+              ADVANCED GAMEPLAY ASSIST TOOLS{" "}
               <span className="bg-gradient-to-r from-[#f8d896] via-[#f3c474] to-[#e2a33b] bg-clip-text text-transparent">
-                &amp; Extended Guideline Tools
+                AND ALL HACKS MODE OF 100% WINNING
               </span>
             </Heading>
 
             <p className="mt-2.5 max-w-xl text-xs leading-relaxed text-[#c6d3cd] sm:text-sm">
-              Dominate Every Match with Precision Cushion Shot Predictions &amp; Auto-Play
+              We provide all advanced gameplay assist tools and hacks that you can purchase for 1 Day, 1 Week, 1 Month, 6 Months, 1 Year, or even Lifetime access. We guarantee that these tools will never stop working, and our surety is that you won&apos;t lose a single match while using them.
             </p>
 
+            {/* Available Access Durations */}
+            <div className="mt-3.5 flex flex-wrap gap-1.5">
+              {ASSIST_ACCESS_DURATIONS.map((dur) => (
+                <span
+                  key={dur}
+                  className="rounded-md border border-[#f3c474]/40 bg-black/45 px-2.5 py-1 font-mono text-[10px] font-bold text-[#f3c474]"
+                >
+                  {dur}
+                </span>
+              ))}
+            </div>
+
             {/* 4 Key Tool Capability Tiles */}
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
               {ASSIST_HIGHLIGHTS.map((item) => (
                 <div
                   key={item.label}
@@ -163,6 +186,26 @@ export function GameplayAssistShop({
               ))}
             </div>
 
+            <p className="mt-4 text-xs font-semibold text-[#68d8ae]">
+              To get yours now, contact us on the number given below or click below to buy instantly!
+            </p>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2.5">
+              <Link
+                href="/store/vip-access"
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-5 text-xs font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
+              >
+                Buy Instantly <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <WhatsAppCta
+                message={`Hi ${site.name}! I want to buy Advanced Gameplay Assist Tools & 100% Winning Mode (1 Day / 1 Week / 1 Month / 6 Months / 1 Year / Lifetime).`}
+                label="WhatsApp"
+                showNumber
+                size="sm"
+                className="h-10 rounded-xl px-4 text-xs"
+              />
+            </div>
+
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-[#b4c4bc]">
               <span className="inline-flex items-center gap-1.5">
                 <Target className="h-3.5 w-3.5 text-[#f3c474]" /> Cushion Line Prediction
@@ -171,7 +214,7 @@ export function GameplayAssistShop({
                 <KeyRound className="h-3.5 w-3.5 text-[#68d8ae]" /> Instant License Delivery
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#68d8ae]" /> Anti-Ban Builds &amp; 24/7 Support
+                <ShieldCheck className="h-3.5 w-3.5 text-[#68d8ae]" /> Never Stops Working Guarantee
               </span>
             </div>
           </div>

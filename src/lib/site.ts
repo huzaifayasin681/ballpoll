@@ -20,6 +20,10 @@ export const site = {
   referralPercent: Number(process.env.NEXT_PUBLIC_REFERRAL_PERCENT || 5),
 };
 
+export function whatsappLink(message: string) {
+  return `${site.whatsappHref}?text=${encodeURIComponent(message)}`;
+}
+
 export const acceptedPaymentChannels = [
   { name: "JazzCash", detail: "Wallet" },
   { name: "Easypaisa", detail: "Wallet" },
