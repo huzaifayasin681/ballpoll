@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Lock, ShieldCheck, Clock, Headphones, Mail, MessageCircle, Send } from "lucide-react";
 import { Container } from "@/components/ui/primitives";
 import { Logo } from "./header";
-import { site } from "@/lib/site";
+import { acceptedPaymentChannels, site } from "@/lib/site";
 
 const YEAR = new Date().getFullYear();
 
@@ -79,28 +79,34 @@ export function Footer() {
           <div className="sm:col-span-2 lg:col-span-2">
             <Logo />
             <p className="mt-3.5 max-w-sm text-xs leading-relaxed text-muted">{site.description}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <a
-                href={`mailto:${site.supportEmail}`}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-muted transition hover:border-border-hover hover:text-foreground"
-              >
-                <Mail className="h-3.5 w-3.5 shrink-0 text-brand" /> {site.supportEmail}
-              </a>
+            <div className="mt-4 flex flex-col items-start gap-2">
               <a
                 href={site.whatsappHref}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-muted transition hover:border-border-hover hover:text-foreground"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-brand-border bg-brand-soft/60 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-brand hover:bg-brand-soft"
               >
-                <MessageCircle className="h-3.5 w-3.5 shrink-0 text-brand" /> WhatsApp
+                <MessageCircle className="h-3.5 w-3.5 shrink-0 text-brand" />
+                <span>WhatsApp:</span>
+                <span className="font-mono font-bold text-brand">{site.whatsapp}</span>
+              </a>
+              <a
+                href={`mailto:${site.supportEmail}`}
+                className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-muted transition hover:border-border-hover hover:text-foreground"
+              >
+                <Mail className="h-3.5 w-3.5 shrink-0 text-brand" />
+                <span>Email:</span>
+                <span className="font-mono font-semibold text-foreground">{site.supportEmail}</span>
               </a>
               <a
                 href={site.telegramHref}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-muted transition hover:border-border-hover hover:text-foreground"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-muted transition hover:border-border-hover hover:text-foreground"
               >
-                <Send className="h-3.5 w-3.5 shrink-0 text-brand" /> {site.telegram}
+                <Send className="h-3.5 w-3.5 shrink-0 text-brand" />
+                <span>Telegram:</span>
+                <span className="font-mono font-semibold text-foreground">{site.telegram}</span>
               </a>
             </div>
           </div>
@@ -119,7 +125,32 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-10 flex flex-col justify-between gap-3 border-t border-border pt-6 text-xs text-muted sm:flex-row">
+
+        {/* Accepted Payment Channels */}
+        <div className="mt-10 flex flex-col gap-3.5 border-t border-border pt-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground">
+              Accepted Payment Channels
+            </p>
+            <p className="mt-0.5 text-xs text-muted">
+              Fast manual confirmation via WhatsApp &amp; instant order tracking
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {acceptedPaymentChannels.map(({ name, detail }) => (
+              <div
+                key={name}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 shadow-2xs"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
+                <span className="whitespace-nowrap text-xs font-bold text-foreground">{name}</span>
+                <span className="hidden whitespace-nowrap font-mono text-[10px] text-muted sm:inline">· {detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col justify-between gap-3 border-t border-border pt-6 text-xs text-muted sm:flex-row">
           <p className="leading-relaxed">
             {site.name} is an independent gaming marketplace and is not affiliated with or endorsed by Miniclip SA.{" "}
             <Link href="/legal/terms" className="underline hover:text-foreground">

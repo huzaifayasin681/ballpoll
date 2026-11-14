@@ -3,19 +3,29 @@ function cleanEnv(val: string | undefined, fallback: string) {
   return val;
 }
 
+const whatsapp = cleanEnv(process.env.NEXT_PUBLIC_WHATSAPP, "+923047256544");
+const whatsappDigits = whatsapp.replace(/\D/g, "") || "923047256544";
+
 export const site = {
   name: cleanEnv(process.env.NEXT_PUBLIC_SITE_NAME, "GlobalPoolStore"),
   url: cleanEnv(process.env.NEXT_PUBLIC_SITE_URL, "http://localhost:3000"),
   tagline: "8 Ball Pool Coins, Cash, Cues, Accounts & Boosting",
   description:
     "Buy 8 Ball Pool coins, cash, legendary cues, verified accounts and rank boosting. Fast delivery, encrypted checkout and 24/7 customer support.",
-  supportEmail: cleanEnv(process.env.NEXT_PUBLIC_SUPPORT_EMAIL, "support@globalpoolstore.com"),
-  whatsapp: cleanEnv(process.env.NEXT_PUBLIC_WHATSAPP, "+1 (555) 234-5678"),
-  whatsappHref: "https://wa.me/15552345678",
+  supportEmail: cleanEnv(process.env.NEXT_PUBLIC_SUPPORT_EMAIL, "mr.john.iub@gmail.com"),
+  whatsapp,
+  whatsappHref: `https://wa.me/${whatsappDigits}`,
   telegram: cleanEnv(process.env.NEXT_PUBLIC_TELEGRAM, "@GlobalPoolSupport"),
   telegramHref: "https://t.me/GlobalPoolSupport",
   referralPercent: Number(process.env.NEXT_PUBLIC_REFERRAL_PERCENT || 5),
 };
+
+export const acceptedPaymentChannels = [
+  { name: "JazzCash", detail: "Wallet" },
+  { name: "Easypaisa", detail: "Wallet" },
+  { name: "Bank Transfer", detail: "IBFT / Wire" },
+  { name: "USDT / Binance Pay", detail: "Crypto" },
+] as const;
 
 export const mainNav = [
   { href: "/store", label: "Catalog" },

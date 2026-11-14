@@ -4,13 +4,23 @@ import { cacheLife, cacheTag } from "next/cache";
 import { Flame, Tag } from "lucide-react";
 import { Badge, Card, Container, PageFallback, SectionHeading } from "@/components/ui/primitives";
 import { ProductCard } from "@/components/shop/product-card";
+import { ComboBundlesShop } from "@/components/shop/combo-bundles-shop";
 import { Countdown } from "@/components/shop/countdown";
 import { db } from "@/lib/db";
-import { getActiveSales, getProducts, saleFor } from "@/lib/catalog";
+import { getActiveSales, getProducts, saleFor, toComboBundlePacks } from "@/lib/catalog";
+import { getMoneyContext } from "@/lib/money";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Flash Deals & Discount Bundles",
-  description: "Limited-time discounts on 8 Ball Pool coins, cash, cues and boosting services.",
+  title: { absolute: "8 Ball Pool Combo Deals & Custom Service Packages" },
+  description:
+    "Save Up to 40% with All-in-One Gamer Bundles. Gamer Starter Combo (500M Coins + 5 Legendary Cues + 100 Cash), King Master Bundle (2B Coins + All 20 Cues + 1 Venice/Berlin Ring), Custom Build Box & Flash Deals.",
+  openGraph: {
+    title: "8 Ball Pool Combo Deals & Custom Service Packages",
+    description: "Save Up to 40% with All-in-One Gamer Bundles",
+    images: ["/images/pool/combo-bundles-deals.jpg"],
+  },
+  alternates: { canonical: "/deals" },
 };
 
 async function getCoupons() {
@@ -21,20 +31,32 @@ async function getCoupons() {
 }
 
 async function DealsBody() {
-  const [sales, products, coupons] = await Promise.all([
+  const [sales, products, coupons, money] = await Promise.all([
     getActiveSales(),
     getProducts({}),
     getCoupons(),
+    getMoneyContext(),
   ]);
+  const comboPacks = toComboBundlePacks(products, sales);
   const discounted = products.filter((p) => saleFor(sales, p.slug) || p.variants.some((v) => v.compareCents));
 
   return (
-    <Container className="space-y-12 py-10">
-      <SectionHeading
-        eyebrow="Deals"
-        title="Flash Sales & Discount Bundles"
-        subtitle="Time-limited price drops and active promo codes."
+    <Container className="space-y-12 py-8 sm:py-10">
+      <ComboBundlesShop
+        packs={comboPacks}
+        currency={money.currency}
+        rates={money.rates}
+        whatsappHref={site.whatsappHref}
+        siteName={site.name}
+        headingTag="h1"
       />
+
+      <div className="space-y-6">
+        <SectionHeading
+          eyebrow="Flash Sales & Promo"
+          title="Active Promo Codes & Discounted Packages"
+          subtitle="Time-limited price drops, bundle savings and promo codes."
+        />
 
       {sales.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2">
@@ -73,6 +95,7 @@ async function DealsBody() {
         {discounted.map((p) => (
           <ProductCard key={p.id} product={p} sale={saleFor(sales, p.slug)} />
         ))}
+      </div>
       </div>
     </Container>
   );

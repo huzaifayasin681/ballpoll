@@ -46,6 +46,13 @@ const imageMap: Record<
     sub: "20/20 Collection",
     position: "center center",
   },
+  cue_maxed: {
+    src: "/images/pool/legendary-cues-maxed.jpg",
+    alt: "Maxed Out Legendary Cues — 8 Ball Pool Cue Shop",
+    tag: "MAXED CUES",
+    sub: "Force · Aim · Spin · Time",
+    position: "center center",
+  },
   upgrade: {
     src: "/images/pool/cues-legendary.jpg",
     alt: "8 Ball Pool Cue Upgrade Service",
@@ -67,6 +74,13 @@ const imageMap: Record<
     sub: "Diamond League #1",
     position: "center center",
   },
+  boost_pro: {
+    src: "/images/pool/pro-account-boosting.jpg",
+    alt: "8 Ball Pool Pro Account Boosting & Level Up",
+    tag: "LEVEL & RINGS",
+    sub: "Hand-Played Pro Boost",
+    position: "center center",
+  },
   ring: {
     src: "/images/pool/tables-venues.png",
     alt: "8 Ball Pool Ring Venues - Las Vegas, Tokyo, Venice",
@@ -79,6 +93,20 @@ const imageMap: Record<
     alt: "8 Ball Pool VIP Membership",
     tag: "VIP ACCESS",
     sub: "Black Diamond Tier",
+    position: "center center",
+  },
+  assist_tools: {
+    src: "/images/pool/gameplay-assist-tools.jpg",
+    alt: "8 Ball Pool Pro Aim Assist & Extended Guideline Tools",
+    tag: "PRO ASSIST",
+    sub: "Extended Guideline · Instant Key",
+    position: "center center",
+  },
+  combo_bundle: {
+    src: "/images/pool/combo-bundles-deals.jpg",
+    alt: "8 Ball Pool Combo Deals & Custom Service Packages",
+    tag: "COMBO DEAL",
+    sub: "Save Up to 40% Bundle",
     position: "center center",
   },
 };

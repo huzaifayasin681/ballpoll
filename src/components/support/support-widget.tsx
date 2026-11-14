@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MessageSquare, Send, X } from "lucide-react";
+import { MessageCircle, MessageSquare, Send, X } from "lucide-react";
+import { site } from "@/lib/site";
 
 type Msg = { role: "bot" | "user"; text: string };
+
+const whatsappConversionUrl = `${site.whatsappHref}?text=${encodeURIComponent(
+  `Hi ${site.name}! I want quick support or to place an 8 Ball Pool order.`,
+)}`;
 
 export function SupportWidget() {
   const [open, setOpen] = useState(false);
@@ -39,7 +44,7 @@ export function SupportWidget() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 max-w-[calc(100vw-2rem)]">
+    <div className="fixed bottom-4 right-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-2.5">
       {open ? (
         <div className="w-[calc(100vw-2rem)] max-w-96 overflow-hidden rounded-lg border border-border bg-surface shadow-xl">
           <div className="flex items-center justify-between border-b border-border bg-[#141413] px-4 py-2.5 text-white">
@@ -109,12 +114,26 @@ export function SupportWidget() {
         <button
           onClick={() => setOpen(true)}
           aria-label="Open support chat"
-          className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-[#141413] px-3.5 py-2.5 text-xs font-medium text-white shadow-md transition hover:bg-[#292826]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-[#141413] px-3.5 py-2 text-xs font-medium text-white shadow-md transition hover:bg-[#292826]"
         >
-          <MessageSquare className="h-4 w-4 text-[#5ec29f]" />
+          <MessageSquare className="h-3.5 w-3.5 text-[#5ec29f]" />
           <span>Support Chat</span>
         </button>
       )}
+
+      {/* Floating WhatsApp Button for instant conversion */}
+      <a
+        href={whatsappConversionUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Chat on WhatsApp ${site.whatsapp}`}
+        className="inline-flex items-center gap-2 rounded-full bg-[#15803d] px-4 py-2.5 text-xs font-bold text-white shadow-lg ring-1 ring-white/20 transition-all duration-150 hover:-translate-y-0.5 hover:bg-[#166534] hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/50"
+      >
+        <span className="h-2 w-2 shrink-0 rounded-full bg-[#86efac]" aria-hidden />
+        <MessageCircle className="h-4 w-4 shrink-0" />
+        <span className="whitespace-nowrap">WhatsApp</span>
+        <span className="whitespace-nowrap font-mono text-[11px] font-semibold text-white/90">{site.whatsapp}</span>
+      </a>
     </div>
   );
 }

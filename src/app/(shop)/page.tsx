@@ -4,13 +4,29 @@ import { cacheLife, cacheTag } from "next/cache";
 import { ArrowRight, ArrowUpRight, CheckCircle2, KeyRound, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { Badge, Card, Container, PageFallback, SectionHeading, Stars } from "@/components/ui/primitives";
 import { buttonClass } from "@/components/ui/button";
+import { ShowcaseVideo } from "@/components/ui/showcase-video";
 import { HeroQuickOrder } from "@/components/shop/hero-carousel";
 import { LiveOrderTicker } from "@/components/shop/live-ticker";
 import { ProductCard } from "@/components/shop/product-card";
+import { LegendaryCuesShop } from "@/components/shop/legendary-cues-shop";
+import { ProBoostingShop } from "@/components/shop/pro-boosting-shop";
+import { GameplayAssistShop } from "@/components/shop/gameplay-assist-shop";
+import { ComboBundlesShop } from "@/components/shop/combo-bundles-shop";
 import { categoryIcons } from "@/components/product-art";
 import { JsonLd } from "@/components/json-ld";
 import { db } from "@/lib/db";
-import { applySale, getActiveSales, getCategories, getProducts, getRecentOrdersForTicker, saleFor } from "@/lib/catalog";
+import {
+  applySale,
+  getActiveSales,
+  getCategories,
+  getProducts,
+  getRecentOrdersForTicker,
+  saleFor,
+  toBoostingShopData,
+  toComboBundlePacks,
+  toGameplayAssistPacks,
+  toLegendaryPackItems,
+} from "@/lib/catalog";
 import { getMoneyContext } from "@/lib/money";
 import { site } from "@/lib/site";
 
@@ -26,10 +42,25 @@ async function getHomeContent() {
   "use cache";
   cacheLife("minutes");
   cacheTag("catalog");
-  const [categories, featured, sales, reviews] = await Promise.all([
+  const [
+    categories,
+    featured,
+    sales,
+    coinCashProducts,
+    cueProducts,
+    boostingProducts,
+    accountProducts,
+    vipToolsProducts,
+    reviews,
+  ] = await Promise.all([
     getCategories(),
     getProducts({ featured: true }),
     getActiveSales(),
+    getProducts({ category: "coins-cash" }),
+    getProducts({ category: "cues-unlocks" }),
+    getProducts({ category: "boosting" }),
+    getProducts({ category: "accounts" }),
+    getProducts({ category: "vip-access" }),
     db.review.findMany({
       where: { approved: true },
       include: { product: { select: { name: true, slug: true } } },
@@ -37,11 +68,35 @@ async function getHomeContent() {
       take: 3,
     }),
   ]);
-  return { categories, featured: featured.slice(0, 4), sales, reviews };
+  return {
+    categories,
+    featured: featured.slice(0, 4),
+    sales,
+    coinCashProducts,
+    cueProducts,
+    boostingProducts,
+    accountProducts,
+    vipToolsProducts,
+    reviews,
+  };
 }
 
 async function HomeBody() {
-  const [{ categories, featured, sales, reviews }, ticker, { currency, rates }] = await Promise.all([
+  const [
+    {
+      categories,
+      featured,
+      sales,
+      coinCashProducts,
+      cueProducts,
+      boostingProducts,
+      accountProducts,
+      vipToolsProducts,
+      reviews,
+    },
+    ticker,
+    { currency, rates },
+  ] = await Promise.all([
     getHomeContent(),
     getRecentOrdersForTicker(8),
     getMoneyContext(),
@@ -49,6 +104,11 @@ async function HomeBody() {
 
   const coinProd = featured.find((p) => p.slug === "8-ball-pool-coins") ?? featured[0] ?? null;
   const coinSale = coinProd ? saleFor(sales, coinProd.slug) : null;
+  const cuePacks = toLegendaryPackItems(cueProducts, sales);
+  const boostingData = toBoostingShopData(boostingProducts, accountProducts, sales);
+  const assistPacks = toGameplayAssistPacks(vipToolsProducts, sales);
+  const comboPacks = toComboBundlePacks(coinCashProducts, sales);
+  const totalProducts = categories.reduce((sum, c) => sum + c._count.products, 0);
 
   const orgSchema = {
     "@context": "https://schema.org",
@@ -133,7 +193,115 @@ async function HomeBody() {
         </div>
       </section>
 
-      {/* 3. Curated 4-Card Featured Packages Row */}
+      {/* 2A. Instant Coin & Cash Top-Ups + Elite Players Edition Video Showcase */}
+      <section aria-labelledby="live-showcase-heading">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
+          <SectionHeading
+            eyebrow="24/7 Live Service"
+            title="Instant Coin Top-Ups & Elite Players Showcase"
+            subtitle="Watch our Unique ID coin transfers and elite pro pool sessions in action"
+          />
+          <Link href="/store/coins-cash" className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline">
+            Order Coins &amp; Cash <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid items-stretch gap-5 lg:grid-cols-12">
+          <div className="flex flex-col justify-between overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] p-4 text-white shadow-lg sm:p-5 lg:col-span-8">
+            <div className="overflow-hidden rounded-xl border border-[#f3c474]/35 bg-black/50 shadow-xl">
+              <ShowcaseVideo
+                src="/videos/instant-coin-topups.mp4"
+                poster="/images/pool/instant-coin-topups.jpg"
+                title="Instant Coin & Cash Top-Ups — Safe, Fast & Reliable 24/7 Service"
+              />
+            </div>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#68d8ae]">
+                  Unique ID Only · 24/7 Delivery
+                </p>
+                <h3 id="live-showcase-heading" className="mt-0.5 text-base font-extrabold text-white sm:text-lg">
+                  Instant Coin &amp; Cash Top-Ups
+                </h3>
+                <p className="text-xs text-[#b8c7bf]">
+                  Zero password required—enter your 10-digit Miniclip Unique ID and track delivery live.
+                </p>
+              </div>
+              <Link
+                href="/store/coins-cash"
+                className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-4 text-xs font-bold text-[#1b1406] shadow-xs transition hover:brightness-105"
+              >
+                Top Up Now <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] p-4 text-white shadow-lg sm:p-5 lg:col-span-4">
+            <div className="mx-auto w-full max-w-[245px] overflow-hidden rounded-xl border border-[#f3c474]/35 bg-black/60 shadow-xl">
+              <ShowcaseVideo
+                src="/videos/elite-players-showcase.mp4"
+                poster="/images/pool/elite-players-showcase.jpg"
+                title="8 Ball Pool Services — Elite Players Edition"
+                aspect="portrait"
+              />
+            </div>
+            <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/10 pt-3">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#f3c474]">
+                  Elite Players Edition
+                </p>
+                <p className="truncate text-sm font-bold text-white">Pro Match &amp; Ring Action</p>
+              </div>
+              <Link href="/reviews" className="shrink-0 text-xs font-semibold text-[#68d8ae] hover:underline">
+                Reviews →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2B. Legendary Cues & Max Stats Shop */}
+      <LegendaryCuesShop
+        packs={cuePacks}
+        currency={currency}
+        rates={rates}
+        whatsappHref={site.whatsappHref}
+        siteName={site.name}
+        headingTag="h2"
+        showCatalogLink
+      />
+
+      {/* 3. Pro Account Boosting & Ring Grinding */}
+      <ProBoostingShop
+        packs={boostingData.packs}
+        startingAccountPriceCents={boostingData.startingAccountPriceCents}
+        currency={currency}
+        rates={rates}
+        headingTag="h2"
+        showCatalogLink
+      />
+
+      {/* 4. Advanced Gameplay Assist & Tools */}
+      <GameplayAssistShop
+        packs={assistPacks}
+        currency={currency}
+        rates={rates}
+        headingTag="h2"
+        showCatalogLink
+      />
+
+      {/* 5. Mega Combo Bundles & Custom Services */}
+      <ComboBundlesShop
+        packs={comboPacks}
+        currency={currency}
+        rates={rates}
+        whatsappHref={site.whatsappHref}
+        siteName={site.name}
+        headingTag="h2"
+        showDealsLink
+      />
+
+      {/* 6. Curated 4-Card Featured Packages Row */}
       <section>
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <SectionHeading
@@ -142,7 +310,7 @@ async function HomeBody() {
             subtitle="Most ordered coins, cash, legendary cues and championship accounts"
           />
           <Link href="/store" className={buttonClass("secondary", "sm")}>
-            View All 16 Products <ArrowRight className="h-3.5 w-3.5" />
+            View All {totalProducts} Products <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

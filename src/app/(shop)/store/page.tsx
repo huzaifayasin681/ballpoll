@@ -1,11 +1,26 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ShieldCheck, Zap, Coins } from "lucide-react";
 import { Card, Container, Input, PageFallback, Select } from "@/components/ui/primitives";
+import { ShowcaseVideo } from "@/components/ui/showcase-video";
 import { Button, buttonClass } from "@/components/ui/button";
 import { ProductCard } from "@/components/shop/product-card";
-import { getActiveSales, getCategories, getProducts, saleFor, type ProductFilters } from "@/lib/catalog";
+import { LegendaryCuesShop } from "@/components/shop/legendary-cues-shop";
+import { ProBoostingShop } from "@/components/shop/pro-boosting-shop";
+import { GameplayAssistShop } from "@/components/shop/gameplay-assist-shop";
+import {
+  getActiveSales,
+  getCategories,
+  getProducts,
+  saleFor,
+  toBoostingShopData,
+  toGameplayAssistPacks,
+  toLegendaryPackItems,
+  type ProductFilters,
+} from "@/lib/catalog";
+import { getMoneyContext } from "@/lib/money";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -28,39 +43,138 @@ export async function StoreView({
     speed: str("speed") as ProductFilters["speed"],
     sort: (str("sort") as ProductFilters["sort"]) ?? "popular",
   };
-  const [categories, products, sales] = await Promise.all([getCategories(), getProducts(filters), getActiveSales()]);
+  const isCueShop = categorySlug === "cues-unlocks";
+  const isBoostingShop = categorySlug === "boosting";
+  const isVipToolsShop = categorySlug === "vip-access";
+  const [
+    categories,
+    products,
+    sales,
+    cueCatalogProducts,
+    boostingCatalogProducts,
+    accountCatalogProducts,
+    vipToolsCatalogProducts,
+    money,
+  ] = await Promise.all([
+    getCategories(),
+    getProducts(filters),
+    getActiveSales(),
+    isCueShop ? getProducts({ category: "cues-unlocks" }) : Promise.resolve([]),
+    isBoostingShop ? getProducts({ category: "boosting" }) : Promise.resolve([]),
+    isBoostingShop ? getProducts({ category: "accounts" }) : Promise.resolve([]),
+    isVipToolsShop ? getProducts({ category: "vip-access" }) : Promise.resolve([]),
+    isCueShop || isBoostingShop || isVipToolsShop ? getMoneyContext() : Promise.resolve(null),
+  ]);
   const currentCat = categories.find((c) => c.slug === categorySlug);
+  const cuePacks = isCueShop ? toLegendaryPackItems(cueCatalogProducts, sales) : [];
+  const boostingShopData = isBoostingShop
+    ? toBoostingShopData(boostingCatalogProducts, accountCatalogProducts, sales)
+    : null;
+  const assistPacks = isVipToolsShop ? toGameplayAssistPacks(vipToolsCatalogProducts, sales) : [];
 
   return (
     <Container className="py-8 sm:py-10">
-      {/* Rich Store Header Banner */}
-      <div className="relative mb-6 overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] p-6 text-white shadow-sm sm:p-8">
-        <img
-          src="/images/pool/cues-legendary.png"
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06140f]/95 via-[#091f17]/85 to-[#06140f]/90" />
-        <div className="relative z-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#68d8ae]/30 bg-[#0d2d22]/85 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-[#68d8ae]">
-              <Sparkles className="h-3 w-3 text-[#f3c474]" /> Official Catalog
-            </span>
-            <h1 className="mt-2.5 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              {currentCat ? currentCat.name : "All 8 Ball Pool Products & Services"}
-            </h1>
-            <p className="mt-1 max-w-2xl text-xs sm:text-sm text-[#b8c7bf]">
-              {currentCat
-                ? currentCat.description
-                : "Filter by department, asset type, delivery speed, or price. Every order includes live status tracking."}
-            </p>
+      {isCueShop && money ? (
+        <div className="mb-8">
+          <LegendaryCuesShop
+            packs={cuePacks}
+            currency={money.currency}
+            rates={money.rates}
+            whatsappHref={site.whatsappHref}
+            siteName={site.name}
+            headingTag="h1"
+          />
+        </div>
+      ) : isBoostingShop && money && boostingShopData ? (
+        <div className="mb-8">
+          <ProBoostingShop
+            packs={boostingShopData.packs}
+            startingAccountPriceCents={boostingShopData.startingAccountPriceCents}
+            currency={money.currency}
+            rates={money.rates}
+            headingTag="h1"
+          />
+        </div>
+      ) : isVipToolsShop && money ? (
+        <div className="mb-8">
+          <GameplayAssistShop
+            packs={assistPacks}
+            currency={money.currency}
+            rates={money.rates}
+            headingTag="h1"
+          />
+        </div>
+      ) : categorySlug === "coins-cash" ? (
+        <div className="relative mb-8 overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] text-[#f5f3ed] shadow-lg ring-1 ring-white/5">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#24916a]/20 blur-3xl" />
+            <div className="absolute -bottom-24 right-10 h-72 w-72 rounded-full bg-[#f3c474]/15 blur-3xl" />
           </div>
-          <div className="shrink-0 font-mono text-xs text-[#f3c474]">
-            Showing <strong>{products.length}</strong> available packages
+          <div className="relative z-10 grid items-center gap-6 p-5 sm:gap-8 sm:p-8 lg:grid-cols-12 lg:p-10">
+            <div className="lg:col-span-6">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#f3c474]/35 bg-black/50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-[#f3c474] backdrop-blur-xs">
+                <Coins className="h-3 w-3" /> Coins, Cash &amp; Golden Shots
+              </span>
+              <h1 className="mt-3.5 text-2xl font-extrabold tracking-tight text-white sm:text-3xl lg:text-[2rem] lg:leading-[1.15]">
+                Instant Coin &amp; Cash Top-Ups{" "}
+                <span className="bg-gradient-to-r from-[#f8d896] via-[#f3c474] to-[#e2a33b] bg-clip-text text-transparent">
+                  | Unique ID Delivery
+                </span>
+              </h1>
+              <p className="mt-2.5 max-w-xl text-xs leading-relaxed text-[#c6d3cd] sm:text-sm">
+                {currentCat?.description ??
+                  "Safe, fast & reliable 24/7 delivery using only your 10-digit Miniclip Unique ID—zero password needed."}
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-[#b4c4bc]">
+                <span className="inline-flex items-center gap-1.5">
+                  <Zap className="h-3.5 w-3.5 text-[#f3c474]" /> 1–2 Hour Express Transfer
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#68d8ae]" /> Unique ID Only · Ban-Safe
+                </span>
+              </div>
+            </div>
+            <div className="lg:col-span-6">
+              <div className="relative overflow-hidden rounded-xl border border-[#f3c474]/35 bg-black/50 shadow-2xl ring-1 ring-white/10">
+                <ShowcaseVideo
+                  src="/videos/instant-coin-topups.mp4"
+                  poster="/images/pool/instant-coin-topups.jpg"
+                  title="Instant Coin & Cash Top-Ups — Safe, Fast & Reliable 24/7 Delivery"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        /* Rich Store Header Banner */
+        <div className="relative mb-6 overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] p-6 text-white shadow-sm sm:p-8">
+          <img
+            src="/images/pool/cues-legendary.png"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06140f]/95 via-[#091f17]/85 to-[#06140f]/90" />
+          <div className="relative z-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#68d8ae]/30 bg-[#0d2d22]/85 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-[#68d8ae]">
+                <Sparkles className="h-3 w-3 text-[#f3c474]" /> Official Catalog
+              </span>
+              <h1 className="mt-2.5 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                {currentCat ? currentCat.name : "All 8 Ball Pool Products & Services"}
+              </h1>
+              <p className="mt-1 max-w-2xl text-xs sm:text-sm text-[#b8c7bf]">
+                {currentCat
+                  ? currentCat.description
+                  : "Filter by department, asset type, delivery speed, or price. Every order includes live status tracking."}
+              </p>
+            </div>
+            <div className="shrink-0 font-mono text-xs text-[#f3c474]">
+              Showing <strong>{products.length}</strong> available packages
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Category tabs */}
       <div className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0">

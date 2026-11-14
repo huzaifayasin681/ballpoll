@@ -68,8 +68,15 @@ export async function updateVariantAction(form: FormData) {
   });
   await db.auditLog.create({ data: { actorId: actor.id, action: "inventory.update", target: id } });
   revalidateTag("catalog", "max");
+  revalidatePath("/");
   revalidatePath("/admin/inventory");
   revalidatePath("/store");
+  revalidatePath("/deals");
+  revalidatePath("/store/coins-cash");
+  revalidatePath("/store/cues-unlocks");
+  revalidatePath("/store/boosting");
+  revalidatePath("/store/accounts");
+  revalidatePath("/store/vip-access");
 }
 
 export async function toggleProductStockAction(form: FormData) {
@@ -79,8 +86,15 @@ export async function toggleProductStockAction(form: FormData) {
   await db.product.update({ where: { id }, data: { isActive } });
   await db.auditLog.create({ data: { actorId: actor.id, action: `product.${isActive ? "enable" : "disable"}`, target: id } });
   revalidateTag("catalog", "max");
+  revalidatePath("/");
   revalidatePath("/admin/inventory");
   revalidatePath("/store");
+  revalidatePath("/deals");
+  revalidatePath("/store/coins-cash");
+  revalidatePath("/store/cues-unlocks");
+  revalidatePath("/store/boosting");
+  revalidatePath("/store/accounts");
+  revalidatePath("/store/vip-access");
 }
 
 export async function addLicenseKeysAction(form: FormData) {

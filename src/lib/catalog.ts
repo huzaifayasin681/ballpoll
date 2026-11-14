@@ -98,6 +98,136 @@ export function ratingSummary(reviews: { rating: number }[]) {
   return { avg: reviews.reduce((s, r) => s + r.rating, 0) / reviews.length, count: reviews.length };
 }
 
+export const LEGENDARY_CUE_PACK_SLUGS = [
+  "starter-cue-box",
+  "ultimate-collector-pack",
+  "max-level-upgrade",
+] as const;
+
+export const GAMEPLAY_ASSIST_SLUGS = [
+  "weekly-pass-key",
+  "monthly-vip-key",
+  "ultimate-season-pass",
+] as const;
+
+export const COMBO_BUNDLE_SLUGS = [
+  "gamer-starter-combo",
+  "king-master-bundle",
+] as const;
+
+export type PackVariantOption = {
+  id: string;
+  label: string;
+  priceCents: number;
+  compareCents: number | null;
+};
+
+export type LegendaryPackItem = {
+  slug: string;
+  name: string;
+  image: string;
+  variantId: string;
+  variantLabel: string;
+  priceCents: number;
+  compareCents: number | null;
+  salePercentOff: number | null;
+};
+
+export type BoostingPackItem = {
+  slug: string;
+  name: string;
+  image: string;
+  salePercentOff: number | null;
+  variants: PackVariantOption[];
+};
+
+function mapVariantWithSale(
+  v: ProductCardData["variants"][number],
+  sale: ActiveSale | null,
+): PackVariantOption {
+  return {
+    id: v.id,
+    label: v.label,
+    priceCents: applySale(v.priceCents, sale),
+    compareCents: sale ? v.priceCents : v.compareCents,
+  };
+}
+
+function toSingleVariantPackItems(
+  slugs: readonly string[],
+  products: ProductCardData[],
+  sales: ActiveSale[],
+): LegendaryPackItem[] {
+  return slugs
+    .map((slug) => products.find((p) => p.slug === slug))
+    .filter((p): p is ProductCardData => Boolean(p && p.variants.length > 0))
+    .map((p) => {
+      const sale = saleFor(sales, p.slug);
+      const first = mapVariantWithSale(p.variants[0], sale);
+      return {
+        slug: p.slug,
+        name: p.name,
+        image: p.image,
+        variantId: first.id,
+        variantLabel: first.label,
+        priceCents: first.priceCents,
+        compareCents: first.compareCents,
+        salePercentOff: sale?.percentOff ?? null,
+      };
+    });
+}
+
+/** Maps the three orderable Legendary Cue Shop tiers from catalog products + active sales. */
+export function toLegendaryPackItems(products: ProductCardData[], sales: ActiveSale[]): LegendaryPackItem[] {
+  return toSingleVariantPackItems(LEGENDARY_CUE_PACK_SLUGS, products, sales);
+}
+
+/** Maps the three Gameplay Assist & License Key tiers from catalog products + active sales. */
+export function toGameplayAssistPacks(products: ProductCardData[], sales: ActiveSale[]): LegendaryPackItem[] {
+  return toSingleVariantPackItems(GAMEPLAY_ASSIST_SLUGS, products, sales);
+}
+
+/** Maps Section 5 Mega Combo Bundles from catalog products + active sales. */
+export function toComboBundlePacks(products: ProductCardData[], sales: ActiveSale[]): LegendaryPackItem[] {
+  return toSingleVariantPackItems(COMBO_BUNDLE_SLUGS, products, sales);
+}
+
+export const BOOSTING_PACKAGE_SLUGS = [
+  "high-tier-ring-grinding",
+  "venice-elite-ring-package",
+  "account-level-progression",
+] as const;
+
+/** Maps Section 3 Boosting packages + lowest in-stock Ready-Made Pro Account price. */
+export function toBoostingShopData(
+  boostingProducts: ProductCardData[],
+  accountProducts: ProductCardData[],
+  sales: ActiveSale[],
+): { packs: BoostingPackItem[]; startingAccountPriceCents: number | null } {
+  const packs = BOOSTING_PACKAGE_SLUGS.map((slug) => boostingProducts.find((p) => p.slug === slug))
+    .filter((p): p is ProductCardData => Boolean(p && p.variants.length > 0))
+    .map((p) => {
+      const sale = saleFor(sales, p.slug);
+      return {
+        slug: p.slug,
+        name: p.name,
+        image: p.image,
+        salePercentOff: sale?.percentOff ?? null,
+        variants: p.variants.map((v) => mapVariantWithSale(v, sale)),
+      };
+    });
+
+  const proAccounts = accountProducts.filter((p) => p.slug !== "starter-cash-account");
+  const accountPool = proAccounts.length > 0 ? proAccounts : accountProducts;
+  const inStockPrices = accountPool.flatMap((p) => {
+    const sale = saleFor(sales, p.slug);
+    return p.variants.filter((v) => v.stock !== 0).map((v) => applySale(v.priceCents, sale));
+  });
+  const startingAccountPriceCents = inStockPrices.length > 0 ? Math.min(...inStockPrices) : null;
+
+  return { packs, startingAccountPriceCents };
+}
+
 /** Real, anonymised recent orders for the live ticker (no fake data). */
 export async function getRecentOrdersForTicker(limit = 12) {
   "use cache";

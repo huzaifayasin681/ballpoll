@@ -166,6 +166,36 @@ function createSeedStore() {
             { label: "100 Scratchers", price: 1599, compare: 1995 },
           ],
         },
+        {
+          slug: "gamer-starter-combo",
+          name: "Gamer Starter Combo",
+          shortDesc: "500M Coins + 5 Legendary Cues + 100 Cash — Save 40% all-in-one bundle.",
+          description:
+            "Save 40% over separate purchases with our all-in-one starter bundle: 500M Pool Coins, 5 unlocked Legendary Cues, and 100 Cash delivered safely via encrypted vault.",
+          type: "SERVICE",
+          deliveryMode: "MANUAL",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 6,
+          image: "combo_bundle",
+          badge: "Save 40%",
+          featured: false,
+          variants: [{ label: "500M Coins + 5 Legendary Cues + 100 Cash", price: 2999, compare: 4999 }],
+        },
+        {
+          slug: "king-master-bundle",
+          name: "King Master Bundle",
+          shortDesc: "2 Billion Coins + All 20 Cues + 1 Venice/Berlin Ring — complete pro loadout.",
+          description:
+            "Our flagship combo package saving 40%: 2 Billion Coins, all 20 Legendary Cues unlocked for max perks, plus 1 full hand-played Venice or Berlin Championship Ring.",
+          type: "SERVICE",
+          deliveryMode: "MANUAL",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 24,
+          image: "combo_bundle",
+          badge: "40% OFF · VIP",
+          featured: false,
+          variants: [{ label: "2 Billion Coins + All 20 Cues + 1 Venice/Berlin Ring", price: 14999, compare: 24999 }],
+        },
       ],
     },
     {
@@ -176,6 +206,45 @@ function createSeedStore() {
         "Unlock legendary cues such as Archangel, Mandora, Valkyrie and Firestorm, or upgrade the cues you already own to max stats.",
       icon: "Wand",
       products: [
+        {
+          slug: "starter-cue-box",
+          name: "Starter Cue Box",
+          shortDesc: "Random Legendary Cue Unlock (3 Boxes) — jumpstart your collection.",
+          description:
+            "Open 3 Legendary Surprise Boxes on your 8 Ball Pool account to unlock random Legendary Cue pieces and build Force, Aim, Spin & Time stats with Coin-Back perks. Delivered via AES-256 encrypted login vault.",
+          type: "ITEM",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 6,
+          image: "cue",
+          badge: "3 Boxes",
+          variants: [{ label: "Random Legendary Cue Unlock (3 Boxes)", price: 999, compare: 1499 }],
+        },
+        {
+          slug: "ultimate-collector-pack",
+          name: "Ultimate Collector Pack",
+          shortDesc: "All 20 Legendary Cues Unlocked with Coin-Back Guarantee.",
+          description:
+            "Unlock the entire 20/20 Legendary Cue collection on your 8 Ball Pool account (Archon, Archangel, Valkyrie, Mandora, Firestorm & more). Max out Force, Aim, Spin & Time potential with up to 100% Coin-Back Guarantee and zero recharge fees.",
+          type: "ITEM",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 24,
+          image: "cue_maxed",
+          badge: "20/20 Cues",
+          variants: [{ label: "All 20 Legendary Cues Unlocked", price: 14999, compare: 19999 }],
+        },
+        {
+          slug: "max-level-upgrade",
+          name: "Max Level Upgrade",
+          shortDesc: "Upgrade All Existing Cues to Level 5 Max — max Force, Aim, Spin & Time.",
+          description:
+            "Upgrade every existing Legendary Cue in your inventory to Level 5 Max so you hit maximum Force, Aim, Spin, and Time stats plus full Coin-Back Guarantee.",
+          type: "SERVICE",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 48,
+          image: "upgrade",
+          badge: "Level 5 Max",
+          variants: [{ label: "Upgrade All Existing Cues to Level 5 Max", price: 6999, compare: 8999 }],
+        },
         {
           slug: "archangel-cue",
           name: "Archangel Cue (Legendary)",
@@ -328,6 +397,53 @@ function createSeedStore() {
       icon: "TrendingUp",
       products: [
         {
+          slug: "high-tier-ring-grinding",
+          name: "High-Tier Rings",
+          shortDesc: "Berlin / Rome / Mumbai Ring Grinding — hand-played per-ring completion.",
+          description:
+            "Verified global pro players hand-grind high-stakes Berlin, Rome, or Mumbai championship rings on your account. Zero bots, AES-256 encrypted login vault, and real-time progress tracking.",
+          type: "SERVICE",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 48,
+          image: "ring",
+          badge: "Per Ring",
+          variants: [
+            { label: "Berlin Ring (Per Ring)", price: 4999, compare: 5999 },
+            { label: "Rome Ring (Per Ring)", price: 3499, compare: 4499 },
+            { label: "Mumbai Ring (Per Ring)", price: 2499, compare: 2999 },
+          ],
+        },
+        {
+          slug: "venice-elite-ring-package",
+          name: "Elite Package",
+          shortDesc: "Venice Pro Table Ring + Leaderboard Topping — complete elite dominance.",
+          description:
+            "Book a dedicated top-tier pro booster for Venice Pro Table Ring grinding paired with weekly country/world leaderboard topping. Hand-played 100% safely with live status updates.",
+          type: "SERVICE",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 48,
+          image: "boost_pro",
+          badge: "Venice Elite",
+          variants: [{ label: "Venice Pro Table Ring + Leaderboard Topping", price: 11999, compare: 14999 }],
+        },
+        {
+          slug: "account-level-progression",
+          name: "Level Progression",
+          shortDesc: "Account Level Boost (Level 1 to 150+) — safe hand-leveled XP progression.",
+          description:
+            "Hand-played account leveling from Level 1 up to 150+ by vetted global pro players. Gain massive XP, trophy road milestones, and match rewards safely.",
+          type: "SERVICE",
+          requiredInput: "CREDENTIALS",
+          deliveryHours: 72,
+          image: "boost_pro",
+          badge: "Level 150+",
+          variants: [
+            { label: "Level 1 → 50 Boost", price: 2999, compare: 3999 },
+            { label: "Level 50 → 100 Boost", price: 5999, compare: 7999 },
+            { label: "Level 1 → 150+ Full Max", price: 12999, compare: 16999 },
+          ],
+        },
+        {
           slug: "league-rank-boost",
           name: "League Rank Boost",
           shortDesc: "Bronze → Grandmaster by verified pro boosters.",
@@ -404,6 +520,51 @@ function createSeedStore() {
             { label: "3 Months", price: 2499, compare: 2997 },
             { label: "12 Months", price: 7999, compare: 11988 },
           ],
+        },
+        {
+          slug: "weekly-pass-key",
+          name: "Weekly Pass",
+          shortDesc: "7 Days Pro Aim Assist & Long Guideline Key — instant automated activation.",
+          description:
+            "Unlock extended aim guidelines, multi-rail angle overlays and anti-detection updates for 7 full days. Your activation license key is delivered automatically the moment payment clears.",
+          type: "LICENSE_KEY",
+          deliveryMode: "INSTANT",
+          requiredInput: "NONE",
+          deliveryHours: 0,
+          image: "key",
+          badge: "7-Day Key",
+          featured: false,
+          variants: [{ label: "7 Days Pro Aim Assist & Long Guideline Key", price: 1499, compare: 1999 }],
+        },
+        {
+          slug: "monthly-vip-key",
+          name: "Monthly VIP Key",
+          shortDesc: "30 Days Full Features + Cushion Line Prediction with automated updates.",
+          description:
+            "Full 30-day VIP access including extended guidelines, precision multi-cushion bank shot line predictions, auto-play assist controls and continuous compatibility updates. Instant license delivery.",
+          type: "LICENSE_KEY",
+          deliveryMode: "INSTANT",
+          requiredInput: "NONE",
+          deliveryHours: 0,
+          image: "assist_tools",
+          badge: "30-Day VIP",
+          featured: false,
+          variants: [{ label: "30 Days Full Features + Cushion Line Prediction", price: 3499, compare: 4999 }],
+        },
+        {
+          slug: "ultimate-season-pass",
+          name: "Ultimate Season Pass",
+          shortDesc: "Lifetime / Latest Anti-Ban Update + 24/7 Support with priority builds.",
+          description:
+            "Our highest tier assist package covering ongoing latest anti-ban protection updates, full cushion & trick-shot trajectory engine, instant key replacement protection and dedicated 24/7 VIP support.",
+          type: "LICENSE_KEY",
+          deliveryMode: "INSTANT",
+          requiredInput: "NONE",
+          deliveryHours: 0,
+          image: "assist_tools",
+          badge: "Lifetime Pass",
+          featured: false,
+          variants: [{ label: "Lifetime / Latest Anti-Ban Update + 24/7 Support", price: 8999, compare: 12999 }],
         },
       ],
     },
@@ -827,6 +988,7 @@ export const fallbackDb = {
       if (w) {
         if (w.isActive !== undefined) list = list.filter((p) => p.isActive === w.isActive);
         if (w.featured !== undefined) list = list.filter((p) => p.featured === w.featured);
+        if (w.slug?.in) list = list.filter((p) => w.slug.in.includes(p.slug));
         if (w.type) list = list.filter((p) => p.type === w.type);
         if (w.region) list = list.filter((p) => p.region === w.region);
         if (w.category?.slug) {

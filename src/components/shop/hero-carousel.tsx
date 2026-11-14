@@ -50,14 +50,20 @@ export function HeroQuickOrder({
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] text-[#f5f3ed] shadow-lg ring-1 ring-white/5">
-      {/* Real 8 Ball Pool Backdrop Photography + Multi-layered Emerald & Gold Lighting */}
+      {/* Real 8 Ball Pool Backdrop Video + Multi-layered Emerald & Gold Lighting */}
       <div className="pointer-events-none absolute inset-0">
-        <img
-          src="/images/pool/tables-venues.png"
-          alt=""
-          aria-hidden
-          className="h-full w-full object-cover opacity-35"
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/images/pool/tables-venues.png"
+          aria-hidden="true"
+          className="h-full w-full object-cover opacity-30"
+        >
+          <source src="/videos/instant-coin-topups.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-r from-[#06140f]/95 via-[#091f17]/88 to-[#071812]/92" />
         <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#24916a]/20 blur-3xl" />
         <div className="absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-[#f3c474]/15 blur-3xl" />

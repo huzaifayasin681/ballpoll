@@ -35,7 +35,7 @@ export interface PaymentGateway {
 const manual: PaymentGateway = {
   id: "manual",
   label: "Pay with support (manual)",
-  description: "Place your order now. Our team will send secure payment details by email or WhatsApp.",
+  description: "Place your order now — pay via JazzCash, Easypaisa, Bank Transfer, or USDT / Binance Pay.",
   enabled: () => true,
   async createCheckout(order) {
     return {
