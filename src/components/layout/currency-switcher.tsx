@@ -13,7 +13,7 @@ export function CurrencySwitcher({ current }: { current: CurrencyCode }) {
         value={current}
         disabled={pending}
         onChange={(e) => start(() => setCurrencyAction(e.target.value))}
-        className="h-8 cursor-pointer appearance-none rounded-md border border-border bg-surface pl-2.5 pr-6 text-xs font-medium text-foreground outline-none hover:bg-surface-2 disabled:opacity-60"
+        className="h-8 cursor-pointer appearance-none rounded-[2px] border border-border bg-paper pl-2 pr-5 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink outline-none transition hover:border-brass disabled:opacity-60"
       >
         {Object.keys(currencies).map((c) => (
           <option key={c} value={c}>
@@ -21,7 +21,7 @@ export function CurrencySwitcher({ current }: { current: CurrencyCode }) {
           </option>
         ))}
       </select>
-      <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-muted">▼</span>
+      <span className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-muted">▼</span>
     </label>
   );
 }

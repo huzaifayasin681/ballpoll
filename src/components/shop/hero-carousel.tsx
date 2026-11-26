@@ -99,7 +99,7 @@ export function HeroQuickOrder({
   const currentSlide = HERO_ROTATING_SLIDES[phraseIdx];
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] text-[#f5f3ed] shadow-lg ring-1 ring-white/5">
+    <div className="relative overflow-hidden felt-hero-surface rounded-[6px] border border-brass/35 text-paper">
       {/* Real 8 Ball Pool Backdrop Video + Multi-layered Emerald & Gold Lighting */}
       <div className="pointer-events-none absolute inset-0">
         <video
@@ -114,10 +114,10 @@ export function HeroQuickOrder({
         >
           <source src="/videos/instant-coin-topups.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#06140f]/95 via-[#091f17]/88 to-[#071812]/92" />
-        <div className="animate-gps-float absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#24916a]/25 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-felt-deep/95 via-felt/90 to-felt-deep/95" />
+        <div className="animate-gps-float absolute -left-24 -top-24 h-80 w-80 rounded-full bg-felt/35 blur-3xl" />
         <div
-          className="animate-gps-float absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-[#f3c474]/20 blur-3xl"
+          className="animate-gps-float absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-brass/15 blur-3xl"
           style={{ animationDelay: "1.8s" }}
         />
       </div>
@@ -126,7 +126,7 @@ export function HeroQuickOrder({
       <div className="relative z-10 grid items-center gap-8 p-5 sm:gap-10 sm:p-10 lg:grid-cols-12 lg:p-12">
         {/* Left: Headline, Interactive Category Previews & Actions */}
         <div className="lg:col-span-7">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-[#68d8ae]/35 bg-[#0d2d22]/85 py-1 pl-1.5 pr-3.5 shadow-sm backdrop-blur-md">
+          <div className="inline-flex items-center gap-2.5 rounded-[2px] border border-brass/40 bg-felt-deep/85 py-1 pl-1.5 pr-3.5 shadow-sm backdrop-blur-md">
             <img
               src="/images/pool/logo-8ball.jpg"
               alt="8 Ball Pool"
@@ -134,23 +134,23 @@ export function HeroQuickOrder({
             />
             <span
               key={currentSlide.badge}
-              className="animate-gps-slide-up font-mono text-[11px] font-bold uppercase tracking-widest text-[#68d8ae]"
+              className="animate-gps-slide-up font-mono text-[11px] font-bold uppercase tracking-widest text-brass"
             >
               {currentSlide.badge}
             </span>
           </div>
 
-          <h1 className="mt-4 max-w-xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl sm:leading-[1.08]">
+          <h1 className="mt-4 max-w-xl font-display text-3xl font-semibold tracking-[-0.02em] text-paper sm:text-5xl sm:leading-[1.06]">
             Dominate Every Table with{" "}
             <span
               key={currentSlide.headline}
-              className="animate-gps-slide-up inline-block bg-gradient-to-r from-[#f8d896] via-[#f3c474] to-[#e2a33b] bg-clip-text text-transparent"
+              className="animate-gps-slide-up inline-block font-normal italic text-brass"
             >
               {currentSlide.headline}
             </span>
           </h1>
 
-          <p className="mt-3.5 max-w-lg text-xs leading-relaxed text-[#c6d3cd] sm:text-base">
+          <p className="mt-3.5 max-w-lg text-xs leading-relaxed text-cream/85 sm:text-base">
             Instant 8 Ball Pool coin and cash top-ups using only your 10-digit Miniclip Unique ID, 20/20 maxed Legendary Cues, and verified championship accounts.
           </p>
 
@@ -170,8 +170,8 @@ export function HeroQuickOrder({
                   className={cn(
                     "group relative flex items-center gap-2.5 overflow-hidden rounded-xl border p-2 pr-3 backdrop-blur-md transition-all duration-300",
                     isSpotlight
-                      ? "-translate-y-0.5 border-[#f3c474]/70 bg-black/65 shadow-md ring-1 ring-[#f3c474]/30"
-                      : "border-white/12 bg-black/40 hover:border-[#f3c474]/50 hover:bg-black/60",
+                      ? "-translate-y-0.5 border-brass bg-black/65 shadow-md ring-1 ring-brass/30"
+                      : "border-white/12 bg-black/40 hover:border-brass/60 hover:bg-black/60",
                   )}
                 >
                   <div className="relative h-11 w-14 shrink-0 overflow-hidden rounded-lg border border-white/15">
@@ -188,17 +188,17 @@ export function HeroQuickOrder({
                     <p
                       className={cn(
                         "truncate text-xs font-bold transition-colors",
-                        isSpotlight ? "text-[#f3c474]" : "text-white group-hover:text-[#f3c474]",
+                        isSpotlight ? "text-brass" : "text-white group-hover:text-brass",
                       )}
                     >
                       {card.title}
                     </p>
-                    <p className="truncate text-[10px] text-[#9eb2a8]">{card.sub}</p>
+                    <p className="truncate text-[10px] text-cream/70">{card.sub}</p>
                   </div>
                   {isSpotlight && (
                     <span
                       aria-hidden="true"
-                      className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#68d8ae] shadow-[0_0_8px_#68d8ae]"
+                      className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-brass shadow-[0_0_8px_#C8A24A]"
                     />
                   )}
                 </Link>
@@ -209,7 +209,7 @@ export function HeroQuickOrder({
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
               href="/store"
-              className="relative inline-flex h-11 flex-1 sm:flex-initial items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-6 text-xs sm:text-sm font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
+              className="relative inline-flex h-11 flex-1 sm:flex-initial items-center justify-center gap-2 overflow-hidden rounded-[2px] border border-brass bg-brass px-6 text-xs font-semibold uppercase tracking-[0.14em] text-ink outline -outline-offset-[4px] outline-1 outline-ink/25 transition hover:bg-brass/90"
             >
               <span
                 aria-hidden="true"
@@ -221,9 +221,9 @@ export function HeroQuickOrder({
             </Link>
             <Link
               href="/deals"
-              className="inline-flex h-11 flex-1 sm:flex-initial items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/8 px-5 text-xs sm:text-sm font-semibold text-white backdrop-blur-xs transition hover:border-white/35 hover:bg-white/14"
+              className="inline-flex h-11 flex-1 sm:flex-initial items-center justify-center gap-2 rounded-[2px] border border-paper/30 bg-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] text-paper transition hover:border-brass hover:bg-paper/10"
             >
-              <Sparkles className="h-4 w-4 text-[#f3c474]" /> Flash Deals
+              <Sparkles className="h-4 w-4 text-brass" /> Flash Deals
             </Link>
             <WhatsAppCta
               message={`Hi ${site.name}! I want to order 8 Ball Pool coins, cues, or VIP tools.`}
@@ -234,30 +234,30 @@ export function HeroQuickOrder({
           </div>
 
           {/* 3-stat trust bar */}
-          <div className="mt-7 grid grid-cols-3 gap-3 border-t border-white/10 pt-5 text-[11px] text-[#b0bdb6] sm:text-xs">
+          <div className="mt-7 grid grid-cols-3 gap-3 border-t border-white/10 pt-5 text-[11px] text-cream/75 sm:text-xs">
             <div>
               <p className="font-mono text-xs sm:text-sm font-bold text-white">1–2 Hours</p>
-              <p className="text-[10px] sm:text-[11px] text-[#8fa59b]">Express Coin Transfer</p>
+              <p className="text-[10px] sm:text-[11px] text-cream/65">Express Coin Transfer</p>
             </div>
             <div>
-              <p className="font-mono text-xs sm:text-sm font-bold text-[#68d8ae]">Unique ID Only</p>
-              <p className="text-[10px] sm:text-[11px] text-[#8fa59b]">No Password for Coins</p>
+              <p className="font-mono text-xs sm:text-sm font-bold text-brass">Unique ID Only</p>
+              <p className="text-[10px] sm:text-[11px] text-cream/65">No Password for Coins</p>
             </div>
             <div>
-              <p className="font-mono text-xs sm:text-sm font-bold text-[#f3c474]">4.9 / 5.0 ★</p>
-              <p className="text-[10px] sm:text-[11px] text-[#8fa59b]">Verified Pool Players</p>
+              <p className="font-mono text-xs sm:text-sm font-bold text-brass">4.9 / 5.0 ★</p>
+              <p className="text-[10px] sm:text-[11px] text-cream/65">Verified Pool Players</p>
             </div>
           </div>
         </div>
 
         {/* Right: Elevated Floating Quick Coin Top-Up Card */}
         {coinProduct && selected && (
-          <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-[#0e241c]/95 p-4 sm:p-6 shadow-2xl backdrop-blur-xl lg:col-span-5">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#5cd4a8] via-[#f3c474] to-[#5cd4a8]" />
+          <div className="relative overflow-hidden rounded-[6px] border border-brass/35 bg-felt-deep/95 p-4 sm:p-6 shadow-2xl backdrop-blur-xl lg:col-span-5">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brass via-cream to-brass" />
 
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
               <div className="flex items-center gap-3">
-                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-[#f3c474]/40 shadow-sm">
+                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-brass/50 shadow-sm">
                   <img
                     src="/images/pool/logo-8ball.jpg"
                     alt="8 Ball Pool Coins"
@@ -267,17 +267,17 @@ export function HeroQuickOrder({
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-sm sm:text-base font-bold text-white">Express Coin Top-Up</h2>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[#194d3b] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-[#68d8ae]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#68d8ae] animate-ping" />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-felt px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-brass">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brass animate-ping" />
                       Instant Queue
                     </span>
                   </div>
-                  <p className="text-[11px] text-[#9cb0a6]">Enter your 10-digit Unique ID at checkout</p>
+                  <p className="text-[11px] text-cream/70">Enter your 10-digit Unique ID at checkout</p>
                 </div>
               </div>
               <Link
                 href={`/product/${coinProduct.slug}`}
-                className="font-mono text-[11px] font-semibold text-[#f3c474] hover:underline"
+                className="font-mono text-[11px] font-semibold text-brass hover:underline"
               >
                 All Packs →
               </Link>
@@ -295,20 +295,20 @@ export function HeroQuickOrder({
                     className={cn(
                       "relative flex flex-col items-start justify-between gap-1 rounded-xl border p-3 text-left transition-all duration-150 cursor-pointer",
                       active
-                        ? "border-[#68d8ae] bg-gradient-to-b from-[#1a4a3a] to-[#13382b] text-white shadow-sm ring-1 ring-[#68d8ae]/40"
-                        : "border-white/10 bg-black/25 text-[#c4cec8] hover:border-white/25 hover:bg-black/40 hover:text-white",
+                        ? "border-brass bg-felt text-paper ring-1 ring-brass/40"
+                        : "border-white/10 bg-black/25 text-cream/80 hover:border-white/25 hover:bg-black/40 hover:text-white",
                     )}
                   >
                     {popular && (
-                      <span className=" -top-2 right-2 absolute rounded-full bg-[#f3c474] px-1.5 py-0.2 font-mono text-[8px] font-extrabold uppercase tracking-wider text-[#1b1406]">
+                      <span className=" -top-2 right-2 absolute rounded-full bg-brass px-1.5 py-0.2 font-mono text-[8px] font-extrabold uppercase tracking-wider text-ink">
                         Popular
                       </span>
                     )}
                     <div className="flex w-full items-center justify-between gap-1">
                       <span className="text-xs font-bold text-white">{v.label}</span>
-                      {active && <Check className="h-3.5 w-3.5 shrink-0 text-[#68d8ae]" />}
+                      {active && <Check className="h-3.5 w-3.5 shrink-0 text-brass" />}
                     </div>
-                    <span className="font-mono text-xs font-bold text-[#f3c474]">
+                    <span className="font-mono text-xs font-bold text-brass">
                       {formatMoney(v.priceCents, currency, rates)}
                     </span>
                   </button>
@@ -318,10 +318,10 @@ export function HeroQuickOrder({
 
             <div className="mt-4 flex flex-col gap-3 rounded-xl border border-white/10 bg-black/30 p-3.5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-[#9cb0a6]">Selected Package</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-cream/70">Selected Package</p>
                 <p className="mt-0.5 text-sm sm:text-base font-extrabold text-white">
                   {selected.label} ·{" "}
-                  <span className="font-mono text-[#f3c474]">{formatMoney(selected.priceCents, currency, rates)}</span>
+                  <span className="font-mono text-brass">{formatMoney(selected.priceCents, currency, rates)}</span>
                 </p>
               </div>
 
@@ -343,7 +343,7 @@ export function HeroQuickOrder({
                     setTimeout(() => setJustAdded(false), 1500);
                   }}
                 >
-                  {justAdded ? <Check className="h-3.5 w-3.5 text-[#68d8ae]" /> : <ShoppingCart className="h-3.5 w-3.5" />}
+                  {justAdded ? <Check className="h-3.5 w-3.5 text-brass" /> : <ShoppingCart className="h-3.5 w-3.5" />}
                   {justAdded ? "Added" : "Add"}
                 </Button>
                 <button
@@ -358,15 +358,15 @@ export function HeroQuickOrder({
                     });
                     router.push("/checkout");
                   }}
-                  className="inline-flex h-9 flex-1 sm:flex-initial cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-4 text-xs font-bold text-[#1b1406] shadow-xs transition hover:brightness-105"
+                  className="inline-flex h-9 flex-1 sm:flex-initial cursor-pointer items-center justify-center gap-1.5 rounded-[2px] border border-brass bg-brass px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink outline -outline-offset-[3px] outline-1 outline-ink/25 transition hover:bg-brass/90"
                 >
                   <Zap className="h-3.5 w-3.5" /> Buy Now
                 </button>
               </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-[#9cb0a6]">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#68d8ae]" />
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-cream/70">
+              <ShieldCheck className="h-3.5 w-3.5 text-brass" />
               <span>Protected by 100% Delivery or Money-Back Guarantee</span>
             </div>
           </div>

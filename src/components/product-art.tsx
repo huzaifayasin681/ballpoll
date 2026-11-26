@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Coins, Wand, UserRound, TrendingUp, KeyRound } from "lucide-react";
 
-const imageMap: Record<
+export const POOL_IMAGE_MAP: Record<
   string,
   {
     src: string;
@@ -115,40 +115,52 @@ export function ProductArt({
   image,
   className,
   size = "md",
+  arched = false,
+  srcOverride,
 }: {
   image: string;
+  slug?: string;
   className?: string;
   size?: "sm" | "md" | "lg";
+  arched?: boolean;
+  srcOverride?: string;
 }) {
-  const item = imageMap[image] ?? imageMap.coins;
+  const item = POOL_IMAGE_MAP[image] ?? POOL_IMAGE_MAP.coins;
+  const imgSrc = srcOverride ?? item.src;
 
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center overflow-hidden bg-[#081a14] select-none",
-        size === "sm" ? "rounded-lg border border-border" : "border-b border-border",
+        "relative flex items-center justify-center overflow-hidden bg-felt-deep select-none",
+        arched && "arch-frame border border-brass/35",
+        !arched && (size === "sm" ? "rounded-[4px] border border-border" : "rounded-[4px] border-b border-border"),
         className,
       )}
     >
       <img
-        src={item.src}
+        src={imgSrc}
         alt={item.alt}
         loading="lazy"
         style={{ objectPosition: item.position ?? "center center" }}
         className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
       />
-      {/* Rich studio vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#05110d]/90 via-[#05110d]/25 to-black/20" />
-      <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+      {/* Warm clubhouse vignette */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-felt-deep/90 via-felt-deep/20 to-black/15" />
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0 ring-1 ring-inset ring-brass/20",
+          arched && "arch-frame",
+        )}
+      />
 
       {size !== "sm" && (
         <div className="pointer-events-none absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-[#f3c474]/30 bg-black/75 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider text-[#f3c474] backdrop-blur-xs">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#f3c474]" />
+          <span className="inline-flex items-center gap-1.5 rounded-[2px] border border-brass/40 bg-felt-deep/85 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-brass backdrop-blur-xs">
+            <span className="h-1.5 w-1.5 rounded-full bg-brass" />
             {item.tag}
           </span>
           {size === "lg" && (
-            <span className="rounded-md border border-white/15 bg-black/65 px-2.5 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur-xs">
+            <span className="rounded-[2px] border border-paper/20 bg-felt-deep/75 px-2.5 py-0.5 text-[11px] font-medium text-cream backdrop-blur-xs">
               {item.sub}
             </span>
           )}

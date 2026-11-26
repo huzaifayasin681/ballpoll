@@ -2,28 +2,33 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
-type Variant = "primary" | "secondary" | "ghost" | "outline" | "danger" | "gold";
+type Variant = "primary" | "secondary" | "ghost" | "outline" | "danger" | "gold" | "brass" | "onFeltGhost";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-brand-btn text-white font-semibold hover:bg-brand-btn-hover shadow-xs hover:shadow-sm active:translate-y-[0.5px]",
-  gold: "bg-gradient-to-b from-[#f5ca7b] to-[#e4ad4b] text-[#1b1406] font-bold hover:brightness-105 shadow-xs",
+  primary: "btn-club-primary font-semibold",
+  gold: "btn-club-brass font-semibold",
+  brass: "btn-club-brass font-semibold",
   secondary:
-    "bg-surface text-foreground border border-border hover:border-border-hover hover:bg-surface-2 shadow-2xs",
-  outline: "border border-border bg-transparent text-foreground hover:border-border-hover hover:bg-surface-2",
-  ghost: "text-muted hover:text-foreground hover:bg-surface-2",
-  danger: "bg-danger-soft text-danger border border-danger-border hover:opacity-90",
+    "bg-paper text-ink border border-[#D4C9B2] hover:border-brass hover:bg-[#F5EEDC] font-semibold",
+  outline:
+    "border border-[#D4C9B2] bg-transparent text-ink hover:border-brass hover:bg-paper font-semibold",
+  ghost:
+    "border border-transparent text-ink hover:border-[#D4C9B2] hover:bg-paper font-semibold",
+  onFeltGhost:
+    "border border-brass/50 bg-transparent text-paper hover:border-brass hover:bg-white/5 font-semibold",
+  danger: "bg-danger-soft text-danger border border-danger-border hover:opacity-90 font-semibold",
 };
+
 const sizes: Record<Size, string> = {
-  sm: "h-8 px-3 text-xs rounded-lg",
-  md: "h-9 px-4 text-sm rounded-lg",
-  lg: "h-11 px-5 text-sm rounded-lg",
+  sm: "h-8 px-3.5 text-[10px] tracking-[0.18em] uppercase rounded-[2px]",
+  md: "h-10 px-5 text-[11px] tracking-[0.2em] uppercase rounded-[2px]",
+  lg: "h-11 px-6 text-[11px] tracking-[0.22em] uppercase rounded-[2px]",
 };
 
 export function buttonClass(variant: Variant = "primary", size: Size = "md", className?: string) {
   return cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/50",
     variants[variant],
     sizes[size],
     className,

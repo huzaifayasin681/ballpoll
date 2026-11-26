@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ShoppingCart, Zap } from "lucide-react";
+import { Check } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
 import { Button } from "@/components/ui/button";
 import { formatMoney, type CurrencyCode, type Rates } from "@/lib/currency";
@@ -47,17 +47,17 @@ export function VariantPicker({
       image: product.image,
     });
     setAdded(true);
-    setTimeout(() => setAdded(false), 1800);
+    setTimeout(() => setAdded(false), 1600);
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <div className="mb-2.5 flex items-center justify-between">
-          <p className="text-xs font-bold uppercase tracking-wider text-muted">Select Package / Option</p>
-          <span className="font-mono text-[11px] text-muted">{variants.length} options available</span>
-        </div>
-        <div className="grid gap-2.5 sm:grid-cols-2">
+    <>
+      <div className="space-y-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted">
+          Choose a package
+        </p>
+
+        <div className="space-y-2.5">
           {variants.map((v) => {
             const active = v.id === selected.id;
             const oos = v.stock === 0;
@@ -69,30 +69,36 @@ export function VariantPicker({
                 disabled={oos}
                 onClick={() => setSelectedId(v.id)}
                 className={cn(
-                  "flex cursor-pointer items-center justify-between rounded-xl border px-3.5 py-3 text-left transition-all duration-150",
+                  "flex w-full cursor-pointer items-center justify-between rounded-[4px] border px-4 py-3.5 text-left transition-all",
                   active
-                    ? "border-brand bg-brand-soft shadow-2xs ring-1 ring-brand/25"
-                    : "border-border bg-surface hover:border-border-hover hover:bg-surface-2/50",
+                    ? "border-felt bg-paper ring-1 ring-felt/30"
+                    : "border-border bg-paper/70 hover:border-brass",
                   oos && "cursor-not-allowed opacity-40 line-through",
                 )}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <span
                     className={cn(
                       "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
-                      active ? "border-brand bg-brand text-white" : "border-border bg-background",
+                      active ? "border-felt bg-felt" : "border-[#CBBFA6] bg-paper",
                     )}
                   >
-                    {active && <Check className="h-2.5 w-2.5" />}
+                    {active && <span className="h-1.5 w-1.5 rounded-full bg-paper" />}
                   </span>
-                  <span className="truncate text-sm font-semibold text-foreground">{v.label}</span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-ink">{v.label}</p>
+                    <p className="text-[11px] text-muted">
+                      {oos ? "Out of stock" : v.stock > 0 ? `${v.stock} available` : "Ready for delivery"}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right shrink-0 pl-2">
-                  <span className="font-mono text-sm font-bold text-brand">
+
+                <div className="shrink-0 pl-3 text-right">
+                  <span className="font-display text-lg font-semibold text-ink">
                     {formatMoney(v.salePriceCents, currency, rates)}
                   </span>
                   {hasSavings && (
-                    <span className="ml-1.5 font-mono text-[11px] text-muted line-through">
+                    <span className="ml-2 text-xs text-muted line-through">
                       {formatMoney(v.compareCents!, currency, rates)}
                     </span>
                   )}
@@ -101,52 +107,51 @@ export function VariantPicker({
             );
           })}
         </div>
-      </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-2/80 p-4">
-        <div>
-          <p className="text-xs font-medium text-muted">Selected Package: <strong className="text-foreground">{selected.label}</strong></p>
-          <div className="mt-1 flex items-baseline gap-2.5">
-            <span className="font-mono text-2xl font-extrabold text-foreground">
-              {formatMoney(selected.salePriceCents, currency, rates)}
-            </span>
-            {selected.compareCents && selected.compareCents > selected.salePriceCents && (
-              <span className="font-mono text-sm text-muted line-through">
-                {formatMoney(selected.compareCents, currency, rates)}
-              </span>
+        <div className="grid gap-3 pt-1 sm:grid-cols-2">
+          <Button size="lg" variant="primary" disabled={out} onClick={addCurrent}>
+            {added ? (
+              <>
+                <Check className="h-4 w-4 text-brass" /> Added to cart
+              </>
+            ) : (
+              "Add to cart"
             )}
-          </div>
+          </Button>
+          <Button
+            variant="brass"
+            size="lg"
+            disabled={out}
+            onClick={() => {
+              addCurrent();
+              router.push("/checkout");
+            }}
+          >
+            Buy now
+          </Button>
         </div>
-        <span
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold",
-            out
-              ? "border-danger-border bg-danger-soft text-danger"
-              : "border-brand-border bg-brand-soft text-brand",
-          )}
-        >
-          <span className={cn("h-1.5 w-1.5 rounded-full", out ? "bg-danger" : "bg-brand")} />
-          {out ? "Out of stock" : selected.stock > 0 ? `${selected.stock} in stock` : "Ready for delivery"}
-        </span>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Button size="lg" variant="secondary" disabled={out} onClick={addCurrent}>
-          {added ? <Check className="h-4 w-4 text-brand" /> : <ShoppingCart className="h-4 w-4" />}
-          {added ? "Added to Cart" : "Add to Cart"}
-        </Button>
+      {/* Mobile sticky buy bar */}
+      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-border bg-paper px-4 py-3 shadow-lg sm:hidden">
+        <div className="min-w-0">
+          <p className="truncate text-[11px] text-muted">{selected.label}</p>
+          <p className="font-display text-lg font-semibold text-ink">
+            {formatMoney(selected.salePriceCents, currency, rates)}
+          </p>
+        </div>
         <Button
-          variant="primary"
-          size="lg"
+          variant="brass"
+          size="md"
           disabled={out}
           onClick={() => {
             addCurrent();
             router.push("/checkout");
           }}
         >
-          <Zap className="h-4 w-4" /> Buy Now — Express Checkout
+          Buy now
         </Button>
       </div>
-    </div>
+    </>
   );
 }

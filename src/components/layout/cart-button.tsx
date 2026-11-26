@@ -10,11 +10,11 @@ export function CartButton() {
     <Link
       href="/cart"
       aria-label={`Cart (${count} items)`}
-      className="relative flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface text-foreground transition hover:bg-surface-2"
+      className="relative flex h-9 w-9 items-center justify-center rounded-[2px] text-ink transition hover:bg-surface-2/70"
     >
-      <ShoppingCart className="h-4 w-4" />
+      <ShoppingCart className="h-[18px] w-[18px] stroke-[1.8]" />
       {ready && count > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-btn px-1 text-[10px] font-semibold text-white">
+        <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brass px-1 text-[9px] font-bold text-mahogany">
           {count}
         </span>
       )}

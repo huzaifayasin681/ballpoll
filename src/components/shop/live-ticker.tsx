@@ -22,11 +22,11 @@ export function LiveOrderTicker({ initial }: { initial: Item[] }) {
   if (!items.length) return null;
 
   return (
-    <div className="flex items-center gap-3 overflow-x-auto rounded-xl border border-border bg-surface px-3.5 py-2.5 text-xs text-muted shadow-2xs no-scrollbar">
-      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-brand-border bg-brand-soft px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-brand">
+    <div className="flex items-center gap-3 overflow-x-auto rounded-[6px] border border-border bg-paper px-3.5 py-2.5 text-xs text-muted no-scrollbar">
+      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-[2px] border border-brass/50 bg-accent-soft px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-brass-dark">
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-felt opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-felt" />
         </span>
         Recent Fulfillments
       </span>
@@ -34,17 +34,17 @@ export function LiveOrderTicker({ initial }: { initial: Item[] }) {
         {items.slice(0, 5).map((o) => (
           <span
             key={o.id}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-background/70 px-2.5 py-1 text-[11px]"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-[2px] border border-border bg-cream/65 px-2.5 py-1 text-[11px]"
           >
-            <CheckCircle2 className="h-3 w-3 shrink-0 text-brand" />
-            <strong className="font-semibold text-foreground">{o.who}</strong>
+            <CheckCircle2 className="h-3 w-3 shrink-0 text-felt" />
+            <strong className="font-semibold text-ink">{o.who}</strong>
             {o.country && (
-              <span className="rounded bg-surface-2 px-1 py-0.2 font-mono text-[9px] font-semibold text-muted">
+              <span className="rounded-[2px] border border-border bg-paper px-1 font-mono text-[9px] font-semibold text-muted">
                 {o.country}
               </span>
             )}
             <span className="text-muted">received</span>
-            <span className="font-semibold text-brand">{o.item}</span>
+            <span className="font-semibold text-felt">{o.item}</span>
             <span suppressHydrationWarning className="font-mono text-[10px] text-muted">
               · {timeAgo(o.at)}
             </span>

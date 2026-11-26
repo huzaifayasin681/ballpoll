@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Container, PageFallback, SectionHeading } from "@/components/ui/primitives";
+import { Container, PageFallback } from "@/components/ui/primitives";
+import { ClubhousePageHero } from "@/components/clubhouse/page-hero";
 import { CheckoutClient } from "@/components/cart/checkout-client";
 import { getCurrentUser } from "@/lib/auth";
 import { getMoneyContext } from "@/lib/money";
@@ -12,17 +13,29 @@ export const metadata: Metadata = { title: "Checkout", robots: { index: false } 
 async function CheckoutBody() {
   const [user, { currency, rates }] = await Promise.all([getCurrentUser(), getMoneyContext()]);
   const savedIds = user ? await db.savedGameId.findMany({ where: { userId: user.id } }) : [];
+
   return (
-    <Container className="space-y-8 py-10">
-      <SectionHeading eyebrow="Secure Checkout" title="Complete Your Order" />
-      <CheckoutClient
-        user={user ? { email: user.email, name: user.name, points: user.points } : null}
-        savedIds={savedIds}
-        gateways={listGateways()}
-        currency={currency}
-        rates={rates}
+    <div className="bg-cream">
+      <ClubhousePageHero
+        crumbs={[
+          { label: "Cart", href: "/cart" },
+          { label: "Checkout" },
+        ]}
+        eyebrow="Secure checkout"
+        title="Checkout"
+        subtitle="Three quick steps. No game password needed for coin orders."
       />
-    </Container>
+
+      <Container className="py-10 sm:py-12">
+        <CheckoutClient
+          user={user ? { email: user.email, name: user.name, points: user.points } : null}
+          savedIds={savedIds}
+          gateways={listGateways()}
+          currency={currency}
+          rates={rates}
+        />
+      </Container>
+    </div>
   );
 }
 

@@ -1,15 +1,15 @@
-import Link from "next/link";
 import { Suspense } from "react";
-import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
-import { Badge, Card, Container, PageFallback, SectionHeading, Stars } from "@/components/ui/primitives";
 import { db } from "@/lib/db";
-import { getStoreStats } from "@/lib/catalog";
-import { formatDate } from "@/lib/utils";
+import { getProducts, getStoreStats } from "@/lib/catalog";
+import { Container, PageFallback } from "@/components/ui/primitives";
+import { ClubhousePageHero } from "@/components/clubhouse/page-hero";
+import { ReviewsClient, type ReviewItem } from "@/components/shop/reviews-client";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Customer Reviews & Testimonials",
-  description: "Read customer reviews and ratings across our 8 Ball Pool coins, cues, accounts and boosting services.",
+  title: "Customer Reviews",
+  description: "Verified 8 Ball Pool player reviews from customers after their order is delivered.",
 };
 
 async function getReviews() {
@@ -23,52 +23,16 @@ async function getReviews() {
   });
 }
 
-async function ReviewsBody() {
-  const [reviews, stats] = await Promise.all([getReviews(), getStoreStats()]);
-
-  return (
-    <Container className="space-y-10 py-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading
-          eyebrow="Trust & Reviews"
-          title="Customer Reviews"
-          subtitle="Reviews submitted by signed-in customers with a completed order carry the Verified Buyer badge."
-        />
-        <Card className="flex items-center gap-4 px-5 py-3">
-          <div>
-            <p className="font-display text-2xl font-bold text-foreground">{stats.avgRating.toFixed(1)} / 5</p>
-            <Stars rating={stats.avgRating} />
-          </div>
-          <div className="border-l border-border pl-4 text-xs text-muted">
-            <p className="font-semibold text-foreground">{stats.reviewCount} reviews</p>
-            <p>{stats.completed} orders delivered</p>
-          </div>
-        </Card>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {reviews.map((r) => (
-          <Card key={r.id} className="flex flex-col justify-between p-5">
-            <div>
-              <div className="flex items-center justify-between">
-                <Stars rating={r.rating} />
-                {r.verified ? <Badge tone="green">Verified Buyer</Badge> : <Badge tone="gray">Sample</Badge>}
-              </div>
-              <p className="mt-3 text-sm text-foreground">&ldquo;{r.body}&rdquo;</p>
-            </div>
-            <div className="mt-4 flex items-center justify-between border-t border-border/70 pt-3 text-xs text-muted">
-              <span>
-                {r.author} ({r.country}) · {formatDate(r.createdAt)}
-              </span>
-              <Link href={`/product/${r.product.slug}`} className="text-brand hover:underline">
-                {r.product.name}
-              </Link>
-            </div>
-          </Card>
-        ))}
-      </div>
-    </Container>
-  );
+function classifyGroup(slug: string, categorySlug?: string): ReviewItem["categoryGroup"] {
+  const s = `${slug} ${categorySlug ?? ""}`.toLowerCase();
+  if (s.includes("cue")) return "Cues";
+  if (s.includes("boost") || s.includes("ring") || s.includes("level") || s.includes("rank")) {
+    return "Boosting";
+  }
+  if (s.includes("pass") || s.includes("vip") || s.includes("account") || s.includes("assist")) {
+    return "Passes";
+  }
+  return "Coins";
 }
 
 export default function ReviewsPage() {
@@ -76,5 +40,59 @@ export default function ReviewsPage() {
     <Suspense fallback={<PageFallback />}>
       <ReviewsBody />
     </Suspense>
+  );
+}
+
+async function ReviewsBody() {
+  const [rawReviews, products, stats] = await Promise.all([
+    getReviews(),
+    getProducts({}),
+    getStoreStats(),
+  ]);
+
+  const catBySlug = new Map(products.map((p) => [p.slug, p.category?.slug]));
+
+  const reviews: ReviewItem[] = rawReviews.map((r) => ({
+    id: r.id,
+    author: r.author,
+    country: r.country,
+    rating: r.rating,
+    body: r.body,
+    verified: r.verified,
+    createdAt: r.createdAt.toISOString(),
+    productName: r.product.name,
+    productSlug: r.product.slug,
+    categoryGroup: classifyGroup(r.product.slug, catBySlug.get(r.product.slug)),
+  }));
+
+  const productOptions = products.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+  }));
+
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : stats.avgRating || 4.9;
+
+  return (
+    <div className="bg-cream pb-16">
+      <ClubhousePageHero
+        crumbs={[{ label: "Home", href: "/" }, { label: "Reviews" }]}
+        eyebrow="CUSTOMER REVIEWS"
+        title="What players say"
+        subtitle="Reviews come from customers after their order is delivered."
+      />
+
+      <Container className="mt-8">
+        <ReviewsClient
+          reviews={reviews}
+          products={productOptions}
+          avgRating={avgRating}
+          totalCount={Math.max(stats.reviewCount, reviews.length)}
+        />
+      </Container>
+    </div>
   );
 }

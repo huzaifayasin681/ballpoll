@@ -102,12 +102,12 @@ export function ShowcaseVideo({
       </video>
 
       {showControls && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-end gap-1.5 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-2.5 opacity-90 transition-opacity group-hover:opacity-100">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-end gap-1.5 bg-gradient-to-t from-felt-deep/80 via-felt-deep/20 to-transparent p-2.5 opacity-90 transition-opacity group-hover:opacity-100">
           <button
             type="button"
             onClick={togglePlay}
             aria-label={isPlaying ? `Pause ${title}` : `Play ${title}`}
-            className="pointer-events-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/25 bg-black/70 text-white backdrop-blur-xs transition hover:border-[#f3c474] hover:text-[#f3c474]"
+            className="pointer-events-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-paper/25 bg-felt-deep/80 text-paper backdrop-blur-xs transition hover:border-brass hover:text-brass"
           >
             {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 translate-x-px" />}
           </button>
@@ -115,9 +115,9 @@ export function ShowcaseVideo({
             type="button"
             onClick={toggleMute}
             aria-label={isMuted ? `Unmute ${title}` : `Mute ${title}`}
-            className="pointer-events-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/25 bg-black/70 text-white backdrop-blur-xs transition hover:border-[#f3c474] hover:text-[#f3c474]"
+            className="pointer-events-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-paper/25 bg-felt-deep/80 text-paper backdrop-blur-xs transition hover:border-brass hover:text-brass"
           >
-            {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5 text-[#f3c474]" />}
+            {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5 text-brass" />}
           </button>
         </div>
       )}

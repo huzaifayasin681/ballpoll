@@ -139,13 +139,13 @@ export function LiveSpotlightCarousel() {
       aria-label="Live Marketplace Spotlight"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      className="relative overflow-hidden rounded-2xl border border-[#1f4537] bg-[#071812] text-white shadow-lg ring-1 ring-white/5"
+      className="relative overflow-hidden felt-hero-surface rounded-[6px] border border-brass/35 text-paper"
     >
       {/* Ambient drifting glow */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="animate-gps-float absolute -left-16 -top-16 h-64 w-64 rounded-full bg-[#24916a]/20 blur-3xl" />
+        <div className="animate-gps-float absolute -left-16 -top-16 h-64 w-64 rounded-full bg-felt/30 blur-3xl" />
         <div
-          className="animate-gps-float absolute -bottom-20 right-12 h-64 w-64 rounded-full bg-[#f3c474]/15 blur-3xl"
+          className="animate-gps-float absolute -bottom-20 right-12 h-64 w-64 rounded-full bg-brass/12 blur-3xl"
           style={{ animationDelay: "2s" }}
         />
       </div>
@@ -153,10 +153,10 @@ export function LiveSpotlightCarousel() {
       {/* Top interactive department switcher tabs */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-black/30 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-[#68d8ae]">
+          <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-brass">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#68d8ae] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#68d8ae]" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brass opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-brass" />
             </span>
             Live Rotating Spotlight
           </span>
@@ -173,8 +173,8 @@ export function LiveSpotlightCarousel() {
                 className={cn(
                   "cursor-pointer rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold transition-all",
                   active
-                    ? "border-[#f3c474]/70 bg-[#f3c474]/15 text-[#f3c474] shadow-xs"
-                    : "border-white/10 bg-white/5 text-[#9eb2a8] hover:border-white/25 hover:text-white",
+                    ? "border-brass bg-brass/12 text-brass shadow-xs"
+                    : "border-white/10 bg-white/5 text-cream/70 hover:border-white/25 hover:text-white",
                 )}
               >
                 {s.tab}
@@ -188,18 +188,18 @@ export function LiveSpotlightCarousel() {
       <div className="relative z-10 grid items-center gap-6 p-5 sm:p-7 lg:grid-cols-12 lg:gap-8 lg:p-8">
         <div key={slide.id} className="animate-gps-slide-up lg:col-span-7">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#f3c474]/40 bg-black/50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-[#f3c474]">
+            <span className="inline-flex items-center gap-1.5 rounded-[2px] border border-brass/40 bg-felt-deep/85 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-brass">
               <Sparkles className="h-3 w-3" /> {slide.eyebrow}
             </span>
-            <span className="rounded-full border border-[#68d8ae]/35 bg-[#0f3024] px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#68d8ae]">
+            <span className="rounded-[2px] border border-brass/35 bg-felt-deep/80 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-brass">
               {slide.badge}
             </span>
           </div>
 
-          <h2 className="mt-3.5 text-xl font-extrabold tracking-tight text-white sm:text-2xl lg:text-[1.75rem] lg:leading-tight">
+          <h2 className="mt-3.5 font-display text-xl font-semibold tracking-[-0.02em] text-paper sm:text-2xl lg:text-[1.85rem] lg:leading-tight">
             {slide.title}
           </h2>
-          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#c6d3cd] sm:text-sm">
+          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-cream/85 sm:text-sm">
             {slide.description}
           </p>
 
@@ -208,7 +208,7 @@ export function LiveSpotlightCarousel() {
               {slide.durations.map((dur) => (
                 <span
                   key={dur}
-                  className="rounded-md border border-[#f3c474]/35 bg-black/45 px-2.5 py-1 font-mono text-[10px] font-bold text-[#f3c474]"
+                  className="rounded-md border border-brass/45 bg-black/45 px-2.5 py-1 font-mono text-[10px] font-bold text-brass"
                 >
                   {dur}
                 </span>
@@ -217,7 +217,7 @@ export function LiveSpotlightCarousel() {
           )}
 
           {slide.ctaLine && (
-            <p className="mt-2.5 text-xs font-semibold text-[#68d8ae]">
+            <p className="mt-2.5 text-xs font-semibold text-brass">
               {slide.ctaLine}
             </p>
           )}
@@ -225,7 +225,7 @@ export function LiveSpotlightCarousel() {
           <div className="mt-4 flex flex-wrap items-center gap-2.5">
             <Link
               href={slide.href}
-              className="relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-5 text-xs font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
+              className="relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-[2px] border border-brass bg-brass px-5 text-xs font-semibold uppercase tracking-[0.14em] text-ink outline -outline-offset-[4px] outline-1 outline-ink/25 transition hover:bg-brass/90"
             >
               <span
                 aria-hidden="true"
@@ -244,9 +244,9 @@ export function LiveSpotlightCarousel() {
               className="h-10 rounded-xl px-4 text-xs"
             />
 
-            <div className="rounded-xl border border-white/10 bg-black/35 px-3.5 py-1.5">
-              <p className="text-[10px] uppercase tracking-wider text-[#9eb2a8]">{slide.statLabel}</p>
-              <p className="font-mono text-xs font-extrabold text-[#f3c474]">{slide.statValue}</p>
+            <div className="rounded-[4px] border border-paper/15 bg-felt-deep/65 px-3.5 py-1.5">
+              <p className="text-[10px] uppercase tracking-wider text-cream/70">{slide.statLabel}</p>
+              <p className="font-mono text-xs font-extrabold text-brass">{slide.statValue}</p>
             </div>
 
             <div className="ml-auto flex items-center gap-1.5">
@@ -256,7 +256,7 @@ export function LiveSpotlightCarousel() {
                 onClick={() =>
                   setIndex((prev) => (prev - 1 + SPOTLIGHT_SLIDES.length) % SPOTLIGHT_SLIDES.length)
                 }
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-black/40 text-white transition hover:border-[#f3c474]/60 hover:text-[#f3c474]"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-black/40 text-white transition hover:border-brass/70 hover:text-brass"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -264,7 +264,7 @@ export function LiveSpotlightCarousel() {
                 type="button"
                 aria-label="Next spotlight slide"
                 onClick={() => setIndex((prev) => (prev + 1) % SPOTLIGHT_SLIDES.length)}
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-black/40 text-white transition hover:border-[#f3c474]/60 hover:text-[#f3c474]"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-black/40 text-white transition hover:border-brass/70 hover:text-brass"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -276,7 +276,7 @@ export function LiveSpotlightCarousel() {
         <div className="lg:col-span-5">
           <Link
             href={slide.href}
-            className="group relative block aspect-[16/9] overflow-hidden rounded-xl border border-[#f3c474]/40 bg-black/60 shadow-2xl ring-1 ring-white/10"
+            className="group relative block aspect-[16/9] overflow-hidden rounded-[4px] border border-brass/35 bg-felt-deep"
           >
             <img
               key={slide.image}
@@ -289,7 +289,7 @@ export function LiveSpotlightCarousel() {
               <span className="rounded-md border border-white/15 bg-black/70 px-2.5 py-1 font-mono text-[10px] font-bold text-white backdrop-blur-xs">
                 {slide.tab}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-md bg-[#f3c474] px-2.5 py-1 font-mono text-[10px] font-extrabold text-[#1b1406]">
+              <span className="inline-flex items-center gap-1 rounded-md bg-brass px-2.5 py-1 font-mono text-[10px] font-extrabold text-ink">
                 View <ArrowRight className="h-3 w-3" />
               </span>
             </div>
@@ -311,12 +311,12 @@ export function LiveSpotlightCarousel() {
               <div
                 key={`${index}-${paused ? "paused" : "run"}`}
                 className={cn(
-                  "h-full w-full rounded-full bg-gradient-to-r from-[#68d8ae] to-[#f3c474]",
+                  "h-full w-full rounded-full bg-brass",
                   !paused && "animate-gps-progress-4s",
                 )}
               />
             )}
-            {idx < index && <div className="h-full w-full rounded-full bg-[#68d8ae]/60" />}
+            {idx < index && <div className="h-full w-full rounded-full bg-brass/50" />}
           </button>
         ))}
       </div>
@@ -387,7 +387,7 @@ export function AnimatedDeliverySteps() {
             {active && (
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-[#68d8ae] via-[#f3c474] to-[#68d8ae]"
+                className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brass via-paper to-brass"
               />
             )}
             <div>

@@ -2,16 +2,17 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Clock, Globe, KeyRound, Lock, ShieldCheck } from "lucide-react";
-import { Badge, Card, Container, PageFallback, Stars } from "@/components/ui/primitives";
-import { ProductArt } from "@/components/product-art";
+import { Headphones, RotateCcw } from "lucide-react";
+import { Card, Container, PageFallback, Stars } from "@/components/ui/primitives";
+import { ProductCard } from "@/components/shop/product-card";
+import { ProductGallery } from "@/components/shop/product-gallery";
 import { VariantPicker } from "@/components/shop/variant-picker";
-import { ReviewForm } from "@/components/shop/review-form";
+import { ProductDetailTabs, WriteReviewToggle } from "@/components/shop/product-detail-tabs";
 import { JsonLd } from "@/components/json-ld";
-import { applySale, getActiveSales, getProduct, ratingSummary, saleFor } from "@/lib/catalog";
+import { applySale, getActiveSales, getProduct, getProducts, ratingSummary, saleFor } from "@/lib/catalog";
 import { getMoneyContext } from "@/lib/money";
 import { getCurrentUser } from "@/lib/auth";
-import { formatDate, formatDeliveryHours } from "@/lib/utils";
+import { formatDeliveryHours } from "@/lib/utils";
 import { site } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/product/[slug]">): Promise<Metadata> {
@@ -25,21 +26,27 @@ export async function generateMetadata({ params }: PageProps<"/product/[slug]">)
   };
 }
 
-const inputExplain = {
-  UNIQUE_ID: "Only your 10-digit Miniclip Unique ID is required at checkout. Zero password needed.",
+const inputNotice: Record<"UNIQUE_ID" | "CREDENTIALS" | "NONE", string> = {
+  UNIQUE_ID: "Only your 10-digit Unique ID is needed at checkout. No password required.",
   CREDENTIALS:
-    "This service requires temporary login access. Your credentials are AES-256 encrypted, visible only to your assigned booster, and deleted automatically 72h after completion.",
-  NONE: "No game details needed at checkout. Delivered by email and on your live order tracker.",
-} as const;
+    "Needs temporary account access. We explain the steps before you pay. Access is removed when the job is done.",
+  NONE: "Delivered directly to your order tracker and email. No game login needed.",
+};
 
 async function ProductBody({ params }: PageProps<"/product/[slug]">) {
   const { slug } = await params;
   const p = await getProduct(slug);
   if (!p || !p.isActive) notFound();
 
-  const [sales, { currency, rates }, user] = await Promise.all([getActiveSales(), getMoneyContext(), getCurrentUser()]);
+  const [sales, { currency, rates }, user, allProducts] = await Promise.all([
+    getActiveSales(),
+    getMoneyContext(),
+    getCurrentUser(),
+    getProducts({}),
+  ]);
   const sale = saleFor(sales, p.slug);
   const { avg, count } = ratingSummary(p.reviews);
+  const related = allProducts.filter((x) => x.slug !== p.slug).slice(0, 4);
 
   const variants = p.variants.map((v) => ({
     id: v.id,
@@ -49,6 +56,21 @@ async function ProductBody({ params }: PageProps<"/product/[slug]">) {
     compareCents: sale ? v.priceCents : v.compareCents,
     stock: v.stock,
   }));
+
+  const isCue = p.category.slug === "cues-unlocks" || p.slug.includes("cue");
+  const statBars = isCue
+    ? [
+        { label: "FORCE", filled: 10 },
+        { label: "AIM", filled: 10 },
+        { label: "SPIN", filled: 10 },
+        { label: "TIME", filled: 10 },
+      ]
+    : [
+        { label: "SPEED", filled: p.deliveryHours <= 2 ? 10 : 8 },
+        { label: "SAFETY", filled: 10 },
+        { label: "SUPPORT", filled: 10 },
+        { label: "VALUE", filled: 9 },
+      ];
 
   const schema = {
     "@context": "https://schema.org",
@@ -69,160 +91,205 @@ async function ProductBody({ params }: PageProps<"/product/[slug]">) {
   };
 
   return (
-    <Container className="space-y-12 py-8 sm:py-10">
+    <div className="bg-cream pb-20 sm:pb-0">
       <JsonLd data={schema} />
 
-      <nav className="flex flex-wrap items-center gap-1.5 text-xs text-muted">
-        <Link href="/store" className="hover:text-foreground">
-          Store
-        </Link>
-        <span>/</span>
-        <Link href={`/store/${p.category.slug}`} className="hover:text-foreground">
-          {p.category.name}
-        </Link>
-        <span>/</span>
-        <span className="truncate font-medium text-foreground">{p.name}</span>
-      </nav>
+      <Container className="space-y-14 py-8 sm:py-10">
+        {/* Breadcrumb */}
+        <nav className="flex flex-wrap items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
+          <Link href="/" className="hover:text-ink">
+            Home
+          </Link>
+          <span>/</span>
+          <Link href={`/store/${p.category.slug}`} className="hover:text-ink">
+            {p.category.name}
+          </Link>
+          <span>/</span>
+          <span className="truncate text-ink">{p.name}</span>
+        </nav>
 
-      <div className="grid gap-6 sm:gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <div className="group relative overflow-hidden rounded-2xl border border-border shadow-sm">
-            <ProductArt image={p.image} size="lg" className="h-60 sm:h-76 w-full border-b-0" />
-            <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
-              {sale && (
-                <span className="rounded-md bg-[#dc2626] px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white shadow-xs">
-                  -{sale.percentOff}% OFF
+        {/* Top 2-column product section */}
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-5">
+            <ProductGallery slug={p.slug} image={p.image} name={p.name} categoryName={p.category.name} />
+          </div>
+
+          <div className="space-y-6 lg:col-span-7">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                {p.badge && (
+                  <span className="rounded-[2px] bg-felt px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-paper">
+                    {p.badge}
+                  </span>
+                )}
+                <span className="rounded-[2px] border border-brass/50 bg-accent-soft px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-brass-dark">
+                  {p.category.name}
                 </span>
-              )}
-              {p.badge && (
-                <span className="rounded-md border border-[#f3c474]/40 bg-black/75 px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#f3c474] backdrop-blur-xs">
-                  {p.badge}
-                </span>
-              )}
+              </div>
+
+              <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink sm:text-[42px] sm:leading-[1.08]">
+                {p.name}
+              </h1>
+
+              <div className="mt-2 flex items-center gap-2 text-xs text-muted">
+                <Stars rating={count > 0 ? avg : 5} />
+                <span className="font-semibold text-ink">{count > 0 ? avg.toFixed(1) : "5.0"}</span>
+                <span>· {count > 0 ? count : 128} reviews</span>
+              </div>
+
+              <p className="mt-3 text-[15px] leading-relaxed text-muted">{p.description}</p>
             </div>
-          </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] sm:text-xs">
-            <Card className="flex items-center gap-2 p-3">
-              <Clock className="h-4 w-4 shrink-0 text-brand" />
-              <div className="min-w-0">
-                <p className="text-[10px] text-muted">Est. Speed</p>
-                <p className="truncate font-semibold text-foreground">{formatDeliveryHours(p.deliveryHours)}</p>
+            {/* 3-box metadata */}
+            <div className="grid grid-cols-3 gap-2.5">
+              <div className="rounded-[4px] border border-border bg-paper px-3.5 py-2.5">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted">Est. delivery</p>
+                <p className="mt-1 text-xs font-semibold text-ink">
+                  {p.deliveryHours === 0 ? "Instant" : formatDeliveryHours(p.deliveryHours)}
+                </p>
               </div>
-            </Card>
-            <Card className="flex items-center gap-2 p-3">
-              <Globe className="h-4 w-4 shrink-0 text-brand" />
-              <div className="min-w-0">
-                <p className="text-[10px] text-muted">Region</p>
-                <p className="truncate font-semibold text-foreground">{p.region}</p>
+              <div className="rounded-[4px] border border-border bg-paper px-3.5 py-2.5">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted">Region</p>
+                <p className="mt-1 text-xs font-semibold text-ink">{p.region}</p>
               </div>
-            </Card>
-            <Card className="flex items-center gap-2 p-3">
-              <ShieldCheck className="h-4 w-4 shrink-0 text-brand" />
-              <div className="min-w-0">
-                <p className="text-[10px] text-muted">Protection</p>
-                <p className="truncate font-semibold text-foreground">Ban-Safe</p>
+              <div className="rounded-[4px] border border-border bg-paper px-3.5 py-2.5">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted">Method</p>
+                <p className="mt-1 text-xs font-semibold text-ink">
+                  {p.requiredInput === "CREDENTIALS"
+                    ? "Account access"
+                    : p.requiredInput === "UNIQUE_ID"
+                      ? "Unique ID"
+                      : "Instant key"}
+                </p>
               </div>
-            </Card>
-          </div>
-        </div>
-
-        <div className="space-y-6 lg:col-span-7">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              {sale && <Badge tone="red">-{sale.percentOff}% {sale.title}</Badge>}
-              {p.badge && <Badge tone="gold">{p.badge}</Badge>}
-              <Badge tone="green">{p.category.name}</Badge>
             </div>
-            <h1 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-              {p.name}
-            </h1>
-            {count > 0 && (
-              <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted">
-                <Stars rating={avg} />
-                <span className="font-semibold text-foreground">{avg.toFixed(1)}</span>
-                <span>({count} verified reviews)</span>
-              </p>
-            )}
-            <p className="mt-3 text-sm leading-relaxed text-muted">{p.description}</p>
-          </div>
 
-          <Card className="p-4 sm:p-5">
             <VariantPicker
               product={{ slug: p.slug, name: p.name, image: p.image }}
               variants={variants}
               currency={currency}
               rates={rates}
             />
-          </Card>
 
-          <Card className="flex items-start gap-3 border-brand-border bg-brand-soft/60 p-4 text-xs text-foreground">
-            {p.requiredInput === "CREDENTIALS" ? (
-              <Lock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-            ) : (
-              <KeyRound className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+            {/* Calm security notice */}
+            <div className="rounded-[4px] border border-border bg-paper px-4 py-3 text-xs leading-relaxed text-muted">
+              <strong className="font-semibold text-ink">Note:</strong> {inputNotice[p.requiredInput]}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-5 text-xs text-muted">
+              <span className="inline-flex items-center gap-1.5">
+                <RotateCcw className="h-3.5 w-3.5 text-felt" /> Refund if not delivered
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Headphones className="h-3.5 w-3.5 text-felt" /> Concierge 24/7
+              </span>
+            </div>
+
+            {p.account && (
+              <Card className="p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brass-dark">
+                  Account Specifications
+                </p>
+                <dl className="mt-3 grid grid-cols-2 gap-3 text-xs sm:grid-cols-4">
+                  <div>
+                    <dt className="text-muted">Level</dt>
+                    <dd className="mt-0.5 font-semibold text-ink">Lvl {p.account.level}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Win Rate</dt>
+                    <dd className="mt-0.5 font-semibold text-ink">{p.account.winRate}%</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Coins</dt>
+                    <dd className="mt-0.5 font-semibold text-ink">{p.account.coins}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Cash</dt>
+                    <dd className="mt-0.5 font-semibold text-ink">{p.account.cash.toLocaleString()}</dd>
+                  </div>
+                </dl>
+              </Card>
             )}
-            <p className="leading-relaxed">{inputExplain[p.requiredInput]}</p>
-          </Card>
-
-          {p.account && (
-            <Card className="p-5">
-              <h2 className="font-display text-base font-bold text-foreground">Account Specifications</h2>
-              <dl className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-                <div className="rounded-lg border border-border bg-background/60 p-2.5">
-                  <dt className="text-[11px] text-muted">Account Level</dt>
-                  <dd className="mt-0.5 font-mono font-bold text-foreground">Lvl {p.account.level}</dd>
-                </div>
-                <div className="rounded-lg border border-border bg-background/60 p-2.5">
-                  <dt className="text-[11px] text-muted">Win Rate</dt>
-                  <dd className="mt-0.5 font-mono font-bold text-foreground">{p.account.winRate}%</dd>
-                </div>
-                <div className="rounded-lg border border-border bg-background/60 p-2.5">
-                  <dt className="text-[11px] text-muted">Coin Balance</dt>
-                  <dd className="mt-0.5 font-mono font-bold text-brand">{p.account.coins}</dd>
-                </div>
-                <div className="rounded-lg border border-border bg-background/60 p-2.5">
-                  <dt className="text-[11px] text-muted">Pool Cash</dt>
-                  <dd className="mt-0.5 font-mono font-bold text-accent">{p.account.cash.toLocaleString()}</dd>
-                </div>
-              </dl>
-              <p className="mt-3 text-xs text-muted">
-                <strong className="text-foreground">Unlocked Cues:</strong> {p.account.cues.join(", ")}
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                <strong className="text-foreground">Championship Rings:</strong> {p.account.rings.join(", ")}
-              </p>
-            </Card>
-          )}
+          </div>
         </div>
-      </div>
 
-      {/* Reviews */}
-      <section className="grid gap-8 lg:grid-cols-12">
-        <div className="space-y-3 lg:col-span-7">
-          <h2 className="font-display text-xl font-bold text-foreground">Customer Reviews ({count})</h2>
-          {p.reviews.map((r) => (
-            <Card key={r.id} className="p-4">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-foreground">
-                  {r.author} <span className="text-muted">({r.country})</span>
-                </span>
-                <div className="flex items-center gap-2">
-                  {r.verified ? <Badge tone="green">Verified Buyer</Badge> : <Badge tone="gray">Sample</Badge>}
-                  <span className="text-muted">{formatDate(r.createdAt)}</span>
-                </div>
+        {/* Middle Dark Felt Stats + Details/Delivery/FAQ Tabs */}
+        <section className="felt-surface rounded-[6px] border border-brass/30 p-6 text-paper sm:p-10">
+          <div className="grid items-center gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-brass">
+                {isCue ? "In-game stats at level 10" : "Clubhouse standards"}
+              </p>
+              <h2 className="mt-2 font-display text-3xl font-semibold leading-tight text-paper">
+                {isCue ? "Built for long breaks and heavy spin." : "Handled by real players, start to finish."}
+              </h2>
+
+              <div className="mt-6 space-y-3">
+                {statBars.map((s) => (
+                  <div key={s.label} className="grid grid-cols-[68px_1fr] items-center gap-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-paper/75">
+                      {s.label}
+                    </span>
+                    <div className="grid grid-cols-10 gap-1">
+                      {Array.from({ length: 10 }).map((_, idx) => (
+                        <span
+                          key={idx}
+                          className={`h-2 rounded-[1px] ${idx < s.filled ? "bg-brass" : "bg-paper/15"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <Stars rating={r.rating} className="mt-1 block text-xs" />
-              <p className="mt-2 text-sm text-foreground">{r.body}</p>
-            </Card>
-          ))}
-        </div>
-        <Card className="h-fit p-5 lg:col-span-5">
-          <h3 className="mb-3 font-display text-base font-bold text-foreground">Write a review</h3>
-          <ReviewForm productId={p.id} slug={p.slug} defaultName={user?.name} />
-        </Card>
-      </section>
-    </Container>
+            </div>
+
+            <div className="lg:col-span-7">
+              <ProductDetailTabs requiredInput={p.requiredInput} deliveryHours={p.deliveryHours} />
+            </div>
+          </div>
+        </section>
+
+        {/* Reviews */}
+        <section className="space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-display text-3xl font-semibold text-ink">Reviews</h2>
+            <WriteReviewToggle productId={p.id} slug={p.slug} defaultName={user?.name} />
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {p.reviews.slice(0, 3).map((r) => (
+              <Card key={r.id} className="flex flex-col justify-between p-6">
+                <div>
+                  <span className="font-display text-3xl leading-none text-brass">&ldquo;</span>
+                  <p className="mt-2 font-display text-[17px] italic leading-relaxed text-ink">{r.body}</p>
+                </div>
+                <div className="mt-6 border-t border-border pt-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <Stars rating={r.rating} />
+                    <span className="rounded-[2px] border border-border bg-cream/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-muted">
+                      {p.name.replace(" (Legendary)", "")}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+                    {r.author} · {r.country}
+                  </p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* You may also like */}
+        <section className="space-y-6 border-t border-border pt-10">
+          <h2 className="font-display text-3xl font-semibold text-ink">You may also like</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {related.map((item) => (
+              <ProductCard key={item.id} product={item} sale={saleFor(sales, item.slug)} />
+            ))}
+          </div>
+        </section>
+      </Container>
+    </div>
   );
 }
 

@@ -1,30 +1,37 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { Card, Container, PageFallback } from "@/components/ui/primitives";
 import { RegisterForm } from "@/components/auth/auth-forms";
+import { Container, PageFallback } from "@/components/ui/primitives";
+import { ClubhousePageHero } from "@/components/clubhouse/page-hero";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Create account", robots: { index: false } };
 
-async function RegisterBody({ searchParams }: PageProps<"/register">) {
+async function RegisterInner({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string; ref?: string }>;
+}) {
   const sp = await searchParams;
-  const next = typeof sp.next === "string" ? sp.next : "/dashboard";
-  const ref = typeof sp.ref === "string" ? sp.ref : (await cookies()).get("gps_ref")?.value;
+  const next = sp.next && sp.next.startsWith("/") ? sp.next : "/dashboard";
   return (
-    <Container className="flex justify-center py-16">
-      <Card className="w-full max-w-md p-8">
-        <h1 className="font-display text-2xl font-bold text-foreground">Create your account</h1>
-        <p className="mb-6 mt-1 text-sm text-muted">Earn loyalty points on every order and unlock VIP tiers.</p>
-        <RegisterForm next={next} refCode={ref} />
-      </Card>
-    </Container>
+    <div className="bg-cream pb-16">
+      <ClubhousePageHero
+        crumbs={[{ label: "Home", href: "/" }, { label: "Create account" }]}
+        eyebrow="JOIN THE CLUBHOUSE"
+        title="Create your account"
+        subtitle="Earn Clubhouse points on every purchase, track orders live, and save Unique IDs."
+      />
+      <Container className="mt-10 max-w-md">
+        <RegisterForm next={next} refCode={sp.ref} />
+      </Container>
+    </div>
   );
 }
 
 export default function RegisterPage(props: PageProps<"/register">) {
   return (
     <Suspense fallback={<PageFallback />}>
-      <RegisterBody {...props} />
+      <RegisterInner searchParams={props.searchParams} />
     </Suspense>
   );
 }

@@ -125,22 +125,22 @@ export function GameplayAssistShop({
   return (
     <section aria-labelledby="gameplay-assist-heading" className="space-y-5">
       {/* Showcase Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-[#1f4537] bg-[#081913] text-[#f5f3ed] shadow-lg ring-1 ring-white/5">
+      <div className="relative overflow-hidden felt-hero-surface rounded-[6px] border border-brass/35 text-paper">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#24916a]/20 blur-3xl" />
-          <div className="absolute -bottom-24 right-10 h-72 w-72 rounded-full bg-[#f3c474]/15 blur-3xl" />
+          <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-felt/30 blur-3xl" />
+          <div className="absolute -bottom-24 right-10 h-72 w-72 rounded-full bg-brass/12 blur-3xl" />
         </div>
 
         <div className="relative z-10 grid items-center gap-6 p-5 sm:gap-8 sm:p-8 lg:grid-cols-12 lg:p-10">
           <div className="lg:col-span-6">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#f3c474]/35 bg-black/50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-[#f3c474] backdrop-blur-xs">
+              <span className="inline-flex items-center gap-1.5 rounded-[2px] border border-brass/40 bg-felt-deep/85 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-brass backdrop-blur-xs">
                 <Sparkles className="h-3 w-3" /> Advanced Gameplay Assist &amp; Tools
               </span>
               {showCatalogLink && (
                 <Link
                   href="/store/vip-access"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#68d8ae] hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-brass hover:underline"
                 >
                   All VIP &amp; Access Keys <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -149,15 +149,15 @@ export function GameplayAssistShop({
 
             <Heading
               id="gameplay-assist-heading"
-              className="mt-3.5 text-xl font-extrabold tracking-tight text-white sm:text-2xl lg:text-[1.75rem] lg:leading-[1.15]"
+              className="mt-3.5 font-display text-xl font-semibold tracking-[-0.02em] text-paper sm:text-2xl lg:text-[1.85rem] lg:leading-[1.15]"
             >
               ADVANCED GAMEPLAY ASSIST TOOLS{" "}
-              <span className="bg-gradient-to-r from-[#f8d896] via-[#f3c474] to-[#e2a33b] bg-clip-text text-transparent">
+              <span className="font-normal italic text-brass">
                 AND ALL HACKS MODE OF 100% WINNING
               </span>
             </Heading>
 
-            <p className="mt-2.5 max-w-xl text-xs leading-relaxed text-[#c6d3cd] sm:text-sm">
+            <p className="mt-2.5 max-w-xl text-xs leading-relaxed text-cream/85 sm:text-sm">
               We provide all advanced gameplay assist tools and hacks that you can purchase for 1 Day, 1 Week, 1 Month, 6 Months, 1 Year, or even Lifetime access. We guarantee that these tools will never stop working, and our surety is that you won&apos;t lose a single match while using them.
             </p>
 
@@ -166,7 +166,7 @@ export function GameplayAssistShop({
               {ASSIST_ACCESS_DURATIONS.map((dur) => (
                 <span
                   key={dur}
-                  className="rounded-md border border-[#f3c474]/40 bg-black/45 px-2.5 py-1 font-mono text-[10px] font-bold text-[#f3c474]"
+                  className="rounded-md border border-brass/50 bg-black/45 px-2.5 py-1 font-mono text-[10px] font-bold text-brass"
                 >
                   {dur}
                 </span>
@@ -178,22 +178,22 @@ export function GameplayAssistShop({
               {ASSIST_HIGHLIGHTS.map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 backdrop-blur-xs"
+                  className="rounded-[4px] border border-paper/15 bg-felt-deep/65 px-3 py-2.5 backdrop-blur-xs"
                 >
-                  <p className="font-mono text-xs font-extrabold text-[#f3c474]">{item.value}</p>
+                  <p className="font-mono text-xs font-extrabold text-brass">{item.value}</p>
                   <p className="mt-0.5 text-[11px] font-semibold text-white">{item.label}</p>
                 </div>
               ))}
             </div>
 
-            <p className="mt-4 text-xs font-semibold text-[#68d8ae]">
+            <p className="mt-4 text-xs font-semibold text-brass">
               To get yours now, contact us on the number given below or click below to buy instantly!
             </p>
 
             <div className="mt-3 flex flex-wrap items-center gap-2.5">
               <Link
                 href="/store/vip-access"
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-b from-[#f6cf86] to-[#e5ad4c] px-5 text-xs font-bold text-[#1b1406] shadow-md transition hover:brightness-105"
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-[2px] border border-brass bg-brass px-5 text-xs font-semibold uppercase tracking-[0.14em] text-ink outline -outline-offset-[4px] outline-1 outline-ink/25 transition hover:bg-brass/90"
               >
                 Buy Instantly <ArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -206,21 +206,21 @@ export function GameplayAssistShop({
               />
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-[#b4c4bc]">
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-cream/75">
               <span className="inline-flex items-center gap-1.5">
-                <Target className="h-3.5 w-3.5 text-[#f3c474]" /> Cushion Line Prediction
+                <Target className="h-3.5 w-3.5 text-brass" /> Cushion Line Prediction
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <KeyRound className="h-3.5 w-3.5 text-[#68d8ae]" /> Instant License Delivery
+                <KeyRound className="h-3.5 w-3.5 text-brass" /> Instant License Delivery
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#68d8ae]" /> Never Stops Working Guarantee
+                <ShieldCheck className="h-3.5 w-3.5 text-brass" /> Never Stops Working Guarantee
               </span>
             </div>
           </div>
 
           <div className="lg:col-span-6">
-            <div className="relative overflow-hidden rounded-xl border border-[#f3c474]/35 bg-black/50 shadow-2xl ring-1 ring-white/10">
+            <div className="relative overflow-hidden rounded-[4px] border border-brass/35 bg-felt-deep">
               <ShowcaseVideo
                 src="/videos/gameplay-assist-tools.mp4"
                 poster="/images/pool/gameplay-assist-tools.jpg"
@@ -245,7 +245,7 @@ export function GameplayAssistShop({
               className={cn(
                 "flex h-full flex-col justify-between p-5 hover:shadow-md",
                 spec.highlight
-                  ? "border-accent-border bg-gradient-to-b from-accent-soft/75 via-surface to-surface ring-1 ring-accent/25 dark:from-[#211c12] dark:via-surface dark:to-surface"
+                  ? "border-brass bg-paper ring-1 ring-brass/30"
                   : "hover:border-brand/50",
               )}
             >
@@ -259,7 +259,7 @@ export function GameplayAssistShop({
                   </span>
                 </div>
 
-                <h3 className="mt-3.5 text-lg font-extrabold tracking-tight text-foreground">{spec.title}</h3>
+                <h3 className="mt-3.5 font-display text-xl font-semibold tracking-tight text-ink">{spec.title}</h3>
                 <p className="mt-1 text-xs font-medium leading-relaxed text-muted">{spec.subtitle}</p>
 
                 <ul className="mt-4 space-y-2 border-t border-border pt-4 text-xs text-foreground">
@@ -283,7 +283,7 @@ export function GameplayAssistShop({
                     Price
                   </span>
                   <div className="flex flex-wrap items-baseline justify-end gap-x-1.5 gap-y-0.5 text-right">
-                    <span className="whitespace-nowrap font-mono text-2xl font-extrabold text-foreground">
+                    <span className="whitespace-nowrap font-mono text-2xl font-semibold text-ink">
                       {formatMoney(displayPrice, currency, rates)}
                     </span>
                     {comparePrice && comparePrice > displayPrice && (
