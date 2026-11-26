@@ -773,6 +773,16 @@ function createSeedStore() {
       title: "How to Get Legendary Cues in 8 Ball Pool (2026 Guide)",
       excerpt: "Every legit way to unlock legendary cues, from Legendary Boxes and Pool Pass to events.",
       category: "Guides",
+      coverImage: "/images/pool/cues-legendary.png",
+      coverAlt: "8 Ball Pool Legendary Cues collection showcase",
+      tags: ["8 ball pool", "legendary cues", "cue guide", "archangel cue"],
+      authorName: "GlobalPool Editorial",
+      metaTitle: "How to Get Legendary Cues in 8 Ball Pool (2026 Guide)",
+      metaDesc: "Learn every legit method to unlock maxed Legendary Cues in 8 Ball Pool including Legendary Boxes, Pool Pass rewards, and daily events.",
+      focusKeyword: "legendary cues",
+      canonicalUrl: null,
+      noIndex: false,
+      featured: true,
       readMinutes: 7,
       published: true,
       publishedAt: new Date(now - 86400000 * 2),
@@ -785,6 +795,16 @@ function createSeedStore() {
       title: "Fastest Way to Earn Billions of Coins in 8 Ball Pool",
       excerpt: "Table selection, tournaments and bankroll management to grow your coins quickly.",
       category: "Coins",
+      coverImage: "/images/pool/logo-8ball.jpg",
+      coverAlt: "8 Ball Pool coins and high-stakes bankroll guide",
+      tags: ["8 ball pool coins", "bankroll", "tournaments", "coin tips"],
+      authorName: "GlobalPool Editorial",
+      metaTitle: "Fastest Way to Earn Billions of Coins in 8 Ball Pool",
+      metaDesc: "Master table selection, 5% bankroll rules, and tournaments to build billions of 8 Ball Pool coins without going broke.",
+      focusKeyword: "earn billions of coins",
+      canonicalUrl: null,
+      noIndex: false,
+      featured: false,
       readMinutes: 6,
       published: true,
       publishedAt: new Date(now - 86400000 * 6),
@@ -797,6 +817,16 @@ function createSeedStore() {
       title: "8 Ball Pool Leagues Explained: Bronze to Grandmaster",
       excerpt: "How the league system works and tips for climbing each tier.",
       category: "Ranks",
+      coverImage: "/images/pool/tables-venues.png",
+      coverAlt: "8 Ball Pool championship tables and league venues",
+      tags: ["leagues", "grandmaster", "rank boost", "berlin ring"],
+      authorName: "GlobalPool Editorial",
+      metaTitle: "8 Ball Pool Leagues Explained: Bronze to Grandmaster",
+      metaDesc: "Complete breakdown of every 8 Ball Pool league tier from Bronze to Grandmaster and how to climb weekly leaderboards faster.",
+      focusKeyword: "8 ball pool leagues",
+      canonicalUrl: null,
+      noIndex: false,
+      featured: false,
       readMinutes: 5,
       published: true,
       publishedAt: new Date(now - 86400000 * 10),
@@ -809,6 +839,16 @@ function createSeedStore() {
       title: "How to Find Your 8 Ball Pool Unique ID",
       excerpt: "Your Unique ID is needed for every top-up. Here is where to find it on mobile and web.",
       category: "Help",
+      coverImage: "/images/pool/instant-coin-topups.jpg",
+      coverAlt: "How to locate your 10-digit Miniclip Unique ID",
+      tags: ["unique id", "miniclip", "top up", "how to"],
+      authorName: "GlobalPool Editorial",
+      metaTitle: "How to Find Your 8 Ball Pool Unique ID (Mobile & Web)",
+      metaDesc: "Step-by-step guide to finding your 10-digit 8 Ball Pool Miniclip Unique ID on iOS, Android, and web for fast password-free coin transfers.",
+      focusKeyword: "8 ball pool unique id",
+      canonicalUrl: null,
+      noIndex: false,
+      featured: false,
       readMinutes: 2,
       published: true,
       publishedAt: new Date(now - 86400000 * 14),
@@ -821,6 +861,16 @@ function createSeedStore() {
       title: "How to Keep Your 8 Ball Pool Account Secure",
       excerpt: "Link your account, use strong passwords and avoid phishing.",
       category: "Safety",
+      coverImage: "/images/pool/pro-account-boosting.jpg",
+      coverAlt: "8 Ball Pool account safety and security best practices",
+      tags: ["account safety", "security", "anti ban", "miniclip"],
+      authorName: "GlobalPool Editorial",
+      metaTitle: "How to Keep Your 8 Ball Pool Account Secure (Safety Guide)",
+      metaDesc: "Protect your 8 Ball Pool account with linked logins, unique passwords, and safe order practices so you never risk losing coins or cues.",
+      focusKeyword: "8 ball pool account secure",
+      canonicalUrl: null,
+      noIndex: false,
+      featured: false,
       readMinutes: 4,
       published: true,
       publishedAt: new Date(now - 86400000 * 18),
@@ -1120,8 +1170,81 @@ export const fallbackDb = {
     },
   },
   blogPost: {
-    findMany: async () => [...store().blogPosts].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()),
-    findUnique: async (args: AnyRecord) => store().blogPosts.find((b) => b.slug === args.where.slug) ?? null,
+    findMany: async (args?: AnyRecord) => {
+      let list = [...store().blogPosts];
+      const w = args?.where;
+      if (w) {
+        if (typeof w.published === "boolean") list = list.filter((b) => b.published === w.published);
+        if (typeof w.featured === "boolean") list = list.filter((b) => Boolean(b.featured) === w.featured);
+        if (w.category) list = list.filter((b) => b.category === w.category);
+        if (w.tags?.has) list = list.filter((b) => Array.isArray(b.tags) && b.tags.includes(w.tags.has));
+        if (w.slug?.not) list = list.filter((b) => b.slug !== w.slug.not);
+      }
+      list.sort((a, b) => {
+        if (args?.orderBy && Array.isArray(args.orderBy)) {
+          for (const rule of args.orderBy) {
+            if (rule.featured) {
+              const diff = (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+              if (diff !== 0) return rule.featured === "desc" ? diff : -diff;
+            }
+            if (rule.publishedAt) {
+              const diff = b.publishedAt.getTime() - a.publishedAt.getTime();
+              if (diff !== 0) return rule.publishedAt === "desc" ? diff : -diff;
+            }
+          }
+        }
+        return b.publishedAt.getTime() - a.publishedAt.getTime();
+      });
+      if (args?.take) list = list.slice(0, args.take);
+      return list;
+    },
+    findUnique: async (args: AnyRecord) => {
+      const list = store().blogPosts;
+      if (args.where.id) return list.find((b) => b.id === args.where.id) ?? null;
+      return list.find((b) => b.slug === args.where.slug) ?? null;
+    },
+    create: async (args: AnyRecord) => {
+      const s = store();
+      const nowDate = new Date();
+      const post = {
+        id: uid("post"),
+        coverImage: null,
+        coverAlt: null,
+        tags: [],
+        authorName: "GlobalPool Editorial",
+        metaTitle: null,
+        metaDesc: null,
+        focusKeyword: null,
+        canonicalUrl: null,
+        noIndex: false,
+        featured: false,
+        readMinutes: 5,
+        published: true,
+        publishedAt: nowDate,
+        updatedAt: nowDate,
+        ...args.data,
+      };
+      s.blogPosts.unshift(post);
+      return post;
+    },
+    update: async (args: AnyRecord) => {
+      const s = store();
+      const post = s.blogPosts.find((b) =>
+        args.where.id ? b.id === args.where.id : b.slug === args.where.slug,
+      );
+      if (!post) throw new Error("Post not found");
+      Object.assign(post, args.data, { updatedAt: new Date() });
+      return post;
+    },
+    delete: async (args: AnyRecord) => {
+      const s = store();
+      const idx = s.blogPosts.findIndex((b) =>
+        args.where.id ? b.id === args.where.id : b.slug === args.where.slug,
+      );
+      if (idx === -1) throw new Error("Post not found");
+      const [removed] = s.blogPosts.splice(idx, 1);
+      return removed;
+    },
   },
   faqItem: {
     findMany: async () => [...store().faqItems].sort((a, b) => a.sortOrder - b.sortOrder),

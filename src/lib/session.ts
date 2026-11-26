@@ -1,6 +1,7 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import type { Role } from "@/generated/prisma/enums";
 
 const COOKIE = "gps_session";
@@ -44,6 +45,7 @@ export async function createSession(payload: SessionPayload) {
 }
 
 export async function readSession() {
+  await connection();
   const store = await cookies();
   return decodeSession(store.get(COOKIE)?.value);
 }

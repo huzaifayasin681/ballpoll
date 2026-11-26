@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowLeft, Boxes, ClipboardList, LifeBuoy, Shield, Users } from "lucide-react";
+import { ArrowLeft, Boxes, ClipboardList, FileText, LifeBuoy, Shield, Users } from "lucide-react";
 import { Badge, Container, Skeleton } from "@/components/ui/primitives";
 import { can, requireRole, STAFF_ROLES } from "@/lib/auth";
 import { Logo } from "@/components/layout/header";
@@ -11,6 +11,7 @@ async function AdminChrome({ children }: { children: React.ReactNode }) {
   const nav = [
     { href: "/admin", label: "Orders", Icon: ClipboardList, show: true },
     { href: "/admin/inventory", label: "Inventory & Prices", Icon: Boxes, show: can.manageCatalog(actor.role) },
+    { href: "/admin/posts", label: "Posts & SEO", Icon: FileText, show: actor.role === "ADMIN" },
     { href: "/admin/tickets", label: "Tickets", Icon: LifeBuoy, show: can.tickets(actor.role) },
     { href: "/admin/staff", label: "Staff & Audit", Icon: Users, show: can.manageUsers(actor.role) },
   ].filter((n) => n.show);

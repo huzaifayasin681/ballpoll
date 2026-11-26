@@ -30,8 +30,9 @@ const cols = [
   {
     title: "Help",
     links: [
-      { href: "/help", label: "Support" },
+      { href: "/posts", label: "Posts" },
       { href: "/blog", label: "Guides" },
+      { href: "/help", label: "Support" },
       { href: "/legal/refund", label: "Refund policy" },
       { href: "/legal/terms", label: "Terms" },
       { href: "/legal/privacy", label: "Privacy" },

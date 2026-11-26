@@ -21,29 +21,50 @@ export function headingSlug(text: string): string {
 
 export function extractMarkdownHeadings(body: string): { id: string; text: string }[] {
   return body
+    .replace(/\r\n?/g, "\n")
     .trim()
     .split(/\n\n+/)
     .filter((b) => b.startsWith("## "))
     .map((b) => {
-      const text = b.slice(3).trim();
+      const text = b.slice(3).split("\n")[0].trim();
       return { id: headingSlug(text), text };
     });
 }
 
 export function Markdown({ body }: { body: string }) {
-  const blocks = body.trim().split(/\n\n+/);
+  const blocks = body.replace(/\r\n?/g, "\n").trim().split(/\n\n+/);
   return (
     <div className="prose-gps">
       {blocks.map((b, i) => {
         if (b.startsWith("## ")) {
-          const headingText = b.slice(3).trim();
+          const lines = b.split("\n");
+          const headingText = lines[0].slice(3).trim();
+          const rest = lines.slice(1).join("\n").trim();
           return (
-            <h2 key={i} id={headingSlug(headingText)} className="scroll-mt-24">
-              {inline(headingText)}
-            </h2>
+            <div key={i}>
+              <h2 id={headingSlug(headingText)} className="scroll-mt-24">
+                {inline(headingText)}
+              </h2>
+              {rest && <p>{inline(rest)}</p>}
+            </div>
           );
         }
         if (b.startsWith("### ")) return <h3 key={i}>{inline(b.slice(4))}</h3>;
+        const imgMatch = b.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+        if (imgMatch) {
+          const altText = imgMatch[1] || "Post illustration";
+          const imgUrl = imgMatch[2];
+          return (
+            <figure key={i} className="my-6 overflow-hidden rounded-[6px] border border-border bg-cream/50">
+              <img src={imgUrl} alt={altText} loading="lazy" className="w-full max-h-[460px] object-cover" />
+              {imgMatch[1] && (
+                <figcaption className="border-t border-border px-4 py-2 text-xs text-muted">
+                  {imgMatch[1]}
+                </figcaption>
+              )}
+            </figure>
+          );
+        }
         if (b.startsWith("> ")) return <blockquote key={i}>{inline(b.slice(2))}</blockquote>;
         if (b.split("\n").every((l) => l.startsWith("- "))) {
           return (

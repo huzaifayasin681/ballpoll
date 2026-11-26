@@ -11,6 +11,7 @@ export const LEFT_NAV = [
   { href: "/store", label: "STORE" },
   { href: "/deals", label: "DEALS" },
   { href: "/rewards", label: "REWARDS" },
+  { href: "/posts", label: "POSTS" },
 ] as const;
 
 export const RIGHT_NAV = [
@@ -143,6 +144,7 @@ export function MobileMenu() {
                 { href: "/deals", label: "Flash Deals" },
                 { href: "/rewards", label: "Rewards Club" },
                 { href: "/reviews", label: "Customer Reviews" },
+                { href: "/posts", label: "Posts & Articles" },
                 { href: "/blog", label: "Guides & News" },
                 { href: "/help", label: "Help & Support" },
                 { href: "/track", label: "Track Order" },
