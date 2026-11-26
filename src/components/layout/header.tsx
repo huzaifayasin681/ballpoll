@@ -76,7 +76,7 @@ async function UserSlot() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-paper/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border bg-paper/95 backdrop-blur-md">
       {/* Top Felt Deep utility bar */}
       <div className="bg-felt-deep text-[10px] font-medium uppercase tracking-[0.22em] text-paper/85">
         <Container className="flex h-8 items-center justify-center gap-3 sm:gap-5">
